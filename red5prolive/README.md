@@ -32,26 +32,26 @@ The following steps describe how to setup a new project in the [Eclipse IDE](htt
 1. Open the [Eclipse IDE](https://eclipse.org/downloads/) into a new workspace
   * For the purposes of this example, the new workspace directory will be __/Users/red5pro-user/red5prolive__
 2. From the main menu, select the _File > New > Java Project_
-  ![Red5 Pro New Project](images/red5prolive-1-new-project.png)
+  <p><img src="images/red5prolive-1-new-project.png" alt="Red5 Pro Application" width="320px" height="286px" /></p>
 3. In the _Create a Java Project_ dialog, enter in __Red5ProLive__ for the _Project name_ field
-  ![Red5ProLive Project](images/red5prolive-2-project-define.png)
+  <p><img src="images/red5prolive-2-project-define.png" alt="Red5 Pro Application" width="320px" height="243px" /></p>
 4. Click __Next__
 5. In the _Java Settings_ dialog, select the _Libraries_ tab
-  ![Java Settings Libraries](images/red5prolive-3-libraries.png)
+  <p><img src="images/red5prolive-3-libraries.png" alt="Red5 Pro Application" width="320px" height="313px" /></p>
 6. Click the __Add Variable__ button
   * We will be defining our Red5 Pro server install as a library dependency resource
 7. In the _New Variable Classpath Entry_ dialog, click __Configure Variables__
-  ![New Variable Classpath](images/red5prolive-4-variable-entry.png)
+  <p><img src="images/red5prolive-4-variable-entry.png" alt="Red5 Pro Application" width="320px" height="198px" /></p>
 8. In the _Classpath Variables_ dialog, click __New...__
 9. In the _New Variable Entry_ dialog, enter __RED5PRO_ROOT__ for the _Name_ field, and define the _Path_ value as the root of your Red5 Pro server install. For the purposes of this tutorial, that is __/Users/red5pro-user/red5pro-server/__
-  ![RED5PRO_ROOT Path](images/red5prolive-5-environment-path.png)
+  <p><img src="images/red5prolive-5-environment-path.png" alt="Red5 Pro Application" width="320px" height="133px" /></p>
 10. Click __OK__ and __OK__ again until you are navigated back to the _New Variable Classpath Entry_ dialog
 11. From the _New Variable Classpath Entry_ dialog, select the new __RED5PRO_ROOT__ entry and click __Extend...__
 12. Select the __red5-server.jar__ from the listing and click __OK__
-  ![red5-server.jar dependency](images/red5prolive-6-variable-red5-server.png)
+  <p><img src="images/red5prolive-6-variable-red5-server.png" alt="Red5 Pro Application" width="320px" height="331px" /></p>
 13. You will be redirected back to the _Java Build Path_ dialog
 14. Repeat Steps 6-11, and select the __/lib/red5-server-common.jar__ from the list and click __OK__
-  ![red5-server-common.jar dependency](images/red5prolive-7-variable-red5-server-common.png)
+  <p><img src="images/red5prolive-7-variable-red5-server-common.png" alt="Red5 Pro Application" width="320px" height="333px" /></p>
 
 With our project environment all setup, we can begin developing our first Red5 Pro Server application!
 
@@ -68,18 +68,18 @@ WebApp
 We will use the webapp template shipped with the Red5 Pro Server as a basis for our custom webapp.
 
 1. From the main menu of the Eclipse IDE, select _Window > Show View > Navigator_ and focus on the _Navigator_ view pane in the IDE
-  ![Open Navigator pane](images/red5prolive-8-navigator-view.png)
+  <p><img src="images/red5prolive-8-navigator-view.png" alt="Red5 Pro Application" width="320px" height="378px" /></p>
 2. Using a File Browser, locate the _/webapps/template_ directory from your Red5 Pro server installation
   * For the purposes of this tutorial, that can be found at __/Users/red5pro-user/red5pro-server/webapps/template__
 3. Drag and drop the _template_ directory onto the root __Red5ProLive__ project in the _Navigator_ pane
 4. Select __Copy files and folders__ from the alert displayed
-  ![Copy files and folders](images/red5prolive-9-copy-webapp.png)
+  <p><img src="images/red5prolive-9-copy-webapp.png" alt="Red5 Pro Application" width="320px" height="180px" /></p>
 5. Right-click on the _template_ entry under __Red5ProLive__ project in the _Navigator_ pane and select __Rename...__
 6. Rename the imported webapp directory to: __red5prolive__
 
 Your workspace should now look like something similar to the following:
 
-![Rename webapp](images/red5prolive-10-rename-webapp.png)
+<p><img src="images/red5prolive-10-rename-webapp.png" alt="Red5 Pro Application" width="320px" height="283px" /></p>
 
 ApplicationAdapter
 ---
@@ -90,12 +90,12 @@ The server-side application we will create will display the current live streams
   * Package: __com.red5pro.live__
   * Name: __Red5ProLive__
   * Superclass: __org.red5.server.adapter.MultiThreadedApplicationAdapter__
-  ![New Class](images/red5prolive-11-new-class.png)
+  <p><img src="images/red5prolive-11-new-class.png" alt="Red5 Pro Application" width="320px" height="364px" /></p>
 3. Click __Finish__
 
 Your workspace should look similar to the following:
 
-![Newly created class](images/red5prolive-12-class-created.png)
+<p><img src="images/red5prolive-12-class-created.png" alt="Red5 Pro Application" width="460px" height="280px" /></p>
 
 Before going any further with our application implementation, we will finish setting up our project to be deployed as a webapp.
 
@@ -105,43 +105,43 @@ We will edit the web template files in order to load the __Red5ProLive__ class c
 
 1. Open the _red5prolive/WEB-INF/red5-web.xml_ file in the Eclipse IDE
 2. Select the __Source__ tab from the editor in order to edit the XML markup
-3. Replace the `class` value of the `web.handler` bean with that of out newly cerated class: __com.red5pro.live.Red5ProLive__
-  ![Update red5-web.xml](images/red5prolive-13-red5-web.png)
+3. Replace the `class` value of the `web.handler` bean with that of out newly cerated class: `com.red5pro.live.Red5ProLive`
+  <p><img src="images/red5prolive-13-red5-web.png" alt="Red5 Pro Application" width="320px" height="237px" /></p>
 4. Save the _red5-web.xml_ file
 5. Open the _red5-web.properties_ file and change the `webapp.contextPath` value to be __/red5prolive__
-  ![Update red5-web.properties](images/red5prolive-14-red5-properties.png)
+  <p><img src="images/red5prolive-14-red5-properties.png" alt="Red5 Pro Application" width="320px" height="105px" /></p>
 6. Save the _red5-web.properties_ file
 7. From the Navigator pane, right-click on the __Red5ProLive__ top-level project and select __Properties__
-  ![Project properties](images/red5prolive-15-project-properties.png)
+  <p><img src="images/red5prolive-15-project-properties.png" alt="Red5 Pro Application" width="320px" height="447px" /></p>
 8. Select _Java Build Path__ from the project dialog
 9. Select the _Source_ tab from the menu
 10. Under the _Default output folder_ section, click __Browse__
 11. In the _Folder Selection_ dialog, expand __red5prolive/WEB-INF__ and select the __classes__ folder
-  ![Output change](images/red5prolive-16-output-classes.png)
+  <p><img src="images/red5prolive-16-output-classes.png" alt="Red5 Pro Application" width="420px" height="314px" /></p>
 12. Click __OK__ to confirm out of _Folder Selection_
 13. Click __OK__ to confirm out of the _Project Properties_ dialog
 14. You may be presented with a _Setting Build Paths_ alert, click __YES__
-  ![Confirmation of output change](images/red5prolive-17-settings-confirm.png)
+  <p><img src="images/red5prolive-17-settings-confirm.png" alt="Red5 Pro Application" width="320px" height="89px" /></p>
 
 With the change to output folder for the class generation, your project workspace should look similar to the following:
 
-![Update project workspace](images/red5prolive-18-updated-project.png)
+<p><img src="images/red5prolive-18-updated-project.png" alt="Red5 Pro Application" width="320px" height="446px" /></p>
 
 ### Test Deployment
 We will deploy our webapp to the _/webapps_ directory of the Red5 Pro Server installation to test that everything is set up properly.
 
 1. Using a File Browser, navigate to the __Red5ProLive__ project
 2. Copy the entire _/red5prolive_ directory that we have setup in the previous sections
-  ![Copy project webapp](images/red5prolive-19-project-webapp.png)
+  <p><img src="images/red5prolive-19-project-webapp.png" alt="Red5 Pro Application" width="320px" height="96px" /></p>
 3. Using a File Browser, navigate to the install directory of Red5 Pro Server
   * For the purposes of this example, the new workspace directory will be __/Users/red5pro-user/red5prolive__
 4. Paste the _red5prolive_ directory into the _/webapps_ directory of the Red5 Pro Server so that the webapp is in the same directory as the other webapps shipped with the Red5 Pro Server - e.g., __live__, __secondscreen__, etc.
-  ![Paste webapp in server](images/red5prolive-20-server-webapp.png)
+  <p><img src="images/red5prolive-20-server-webapp.png" alt="Red5 Pro Application" width="320px" height="132px" /></p>
 5. Start the Red5 Pro Server:
   * On OSX & Linux: Open Terminal, `cd` into your Red5 Pro install directory and issue this command: `./red5.sh`
   * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
 6. In the console output, you should start to see listings for __red5prolive__ webapp:
-  ![Console print](images/red5prolive-21-server-console.png)
+  <p><img src="images/red5prolive-21-server-console.png" alt="Red5 Pro Application" width="420px" height="54px" /></p>
 
 Additionally, you can visit [http://localhost:5080/red5prolive/](http://localhost:5080/red5prolive/) and see the default directory listing of the webapp. In the next section we will change this to display a list of streams.
 
@@ -223,7 +223,7 @@ We'll create the __index.jsp__ page which will be the default page shown when na
 1. In the Navigator pane of the Eclipse IDE, right-click on the __/red5prolive_ root directory for the webapp
 2. Select __New > File__
 3. In the _New File_ dialog, enter the following value for the _File name:_ field: __index.jsp__
-  ![New jsp page](images/red5prolive-22-index-jsp.png)
+  <p><img src="images/red5prolive-22-index-jsp.png" width="320px" height="356px" /></p>
 4. That will create a new __index.jsp__ file and open it in the Eclipse IDE
 5. Add the following code to the __index.jsp__ page:
         <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
@@ -304,7 +304,7 @@ We will deploy the changes we have made to the __Red5ProLive__ webapp to the Red
   * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
 7. Open a web browser and point to [http://localhost:5080/red5prolive/](http://localhost:5080/red5prolive/)
 
-![Red5ProLive webapp landing](images/red5prolive-23-webpage.png)
+<p><img src="images/red5prolive-23-webpage.png" alt="Red5 Pro Application" width="320px" height="281px" /></p>
 
 You should see the wording `No streams found. Refresh if needed.` displayed, meaning that there are no current streams available. We will start a broadcast session in the next section and refresh to see the changes!
 
