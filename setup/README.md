@@ -18,7 +18,7 @@ The Red5 Pro server requires Java 1.7+ or higher. [Install Java 1.7+ or higher](
 6. If the server has started successfully, you should see the default landing page for the Red5 Pro server install
   * The landing page can be found at _/webapps/root/index.jsp_ of your Red5 Pro installation. You can modify or remove it as desired. For now, we will use it to navigate around and demonstrate what the Red5 Pro server can do!
 
-![Red5 Pro Landing](images/red5pro-landing-page.png)
+<p><img src="images/red5pro-landing-page.png" alt="Red5 Pro Application" width="320px" height="173px" /></p>
 
 Live Streaming
 ---
@@ -39,8 +39,8 @@ On [Android](http://location-to-ios-app)
 7. From the stream listing at [http://localhost:5080/live/streams.jsp](http://localhost:5080/live/streams.jsp), select the __flash myStream__ link
 8. __Watch youself!__
 
-![Red5 Pro App Landing](images/red5pro-application-landing.png)
-![Red5 Pro Settings Dialog](images/streaming-server-settings.png)
+<p><img src="images/red5pro-application-landing.png" alt="Red5 Pro Application" width="300px" height="480px" /></p>
+<p><img src="images/streaming-server-settings.png" alt="Red5 Pro Application Settings" width="300px" height="480px" /></p>
 
 ### Subscribe
 1. In a web browser, navigate to [http://localhost:5080/live/](http://localhost:5080/live/) and take note of the IP address that is printed at the top of the page
