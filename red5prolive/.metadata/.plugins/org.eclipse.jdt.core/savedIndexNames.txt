@@ -1,3 +1,0 @@
-INDEX VERSION 1.127+/Users/toddanderson/Documents/workspace/red5pro/doc-updates/projects/.metadata/.plugins/org.eclipse.jdt.core
-1726635498.index
-654953548.index

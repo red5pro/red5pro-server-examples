@@ -68,11 +68,18 @@ WebApp
 We will use the webapp template shipped with the Red5 Pro Server as a basis for our custom webapp.
 
 1. From the main menu of the Eclipse IDE, select _Window > Show View > Navigator_ and focus on the _Navigator_ view pane in the IDE
+  ![Open Navigator pane](images/red5prolive-8-navigator-view.png)
 2. Using a File Browser, locate the _/webapps/template_ directory from your Red5 Pro server installation
   * For the purposes of this tutorial, that can be found at __/Users/red5pro-user/red5pro-server/webapps/template__
 3. Drag and drop the _template_ directory onto the root __Red5ProLive__ project in the _Navigator_ pane
-4. Right-click on the _template_ entry under __Red5ProLive__ project in the _Navigator_ pane and select __Rename...__
-5. Rename the imported webapp directory to: __red5prolive__
+4. Select __Copy files and folders__ from the alert displayed
+  ![Copy files and folders](images/red5prolive-9-copy-webapp.png)
+5. Right-click on the _template_ entry under __Red5ProLive__ project in the _Navigator_ pane and select __Rename...__
+6. Rename the imported webapp directory to: __red5prolive__
+
+Your workspace should now look like something similar to the following:
+
+![Rename webapp](images/red5prolive-10-rename-webapp.png)
 
 ApplicationAdapter
 ---
@@ -83,8 +90,12 @@ The server-side application we will create will display the current live streams
   * Package: __com.red5pro.live__
   * Name: __Red5ProLive__
   * Superclass: __org.red5.server.adapter.MultiThreadedApplicationAdapter__
+  ![New Class](images/red5prolive-11-new-class.png)
 3. Click __Finish__
-4. Your workspace should look similar to the following:
+
+Your workspace should look similar to the following:
+
+![Newly created class](images/red5prolive-12-class-created.png)
 
 Before going any further with our application implementation, we will finish setting up our project to be deployed as a webapp.
 
@@ -95,14 +106,18 @@ We will edit the web template files in order to load the __Red5ProLive__ class c
 1. Open the _red5prolive/WEB-INF/red5-web.xml_ file in the Eclipse IDE
 2. Select the __Source__ tab from the editor in order to edit the XML markup
 3. Replace the `class` value of the `web.handler` bean with that of out newly cerated class: __com.red5pro.live.Red5ProLive__
+  ![Update red5-web.xml](images/red5prolive-13-red5-web.png)
 4. Save the _red5-web.xml_ file
 5. Open the _red5-web.properties_ file and change the `webapp.contextPath` value to be __/red5prolive__
+  ![Update red5-web.properties](images/red5prolive-14-red5-properties.png)
 6. Save the _red5-web.properties_ file
 7. From the Navigator pane, right-click on the __Red5ProLive__ top-level project and select __Properties__
+  ![Project properties](images/red5prolive-15-project-properties.png)
 8. Select _Java Build Path__ from the project dialog
 9. Select the _Source_ tab from the menu
 10. Under the _Default output folder_ section, click __Browse__
 11. In the _Folder Selection_ dialog, expand __red5prolive/WEB-INF__ and select the __classes__ folder
+  ![Output change](images/red5prolive-16-output-classes.png)
 12. Click __OK__ to confirm out of _Folder Selection_
 13. Click __OK__ to confirm out of the _Project Properties_ dialog
 14. You may be presented with a _Setting Build Paths_ alert, click __YES__
