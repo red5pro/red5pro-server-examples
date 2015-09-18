@@ -121,21 +121,27 @@ We will edit the web template files in order to load the __Red5ProLive__ class c
 12. Click __OK__ to confirm out of _Folder Selection_
 13. Click __OK__ to confirm out of the _Project Properties_ dialog
 14. You may be presented with a _Setting Build Paths_ alert, click __YES__
+  ![Confirmation of output change](images/red5prolive-17-settings-confirm.png)
 
 With the change to output folder for the class generation, your project workspace should look similar to the following:
+
+![Update project workspace](images/red5prolive-18-updated-project.png)
 
 ### Test Deployment
 We will deploy our webapp to the _/webapps_ directory of the Red5 Pro Server installation to test that everything is set up properly.
 
 1. Using a File Browser, navigate to the __Red5ProLive__ project
 2. Copy the entire _/red5prolive_ directory that we have setup in the previous sections
+  ![Copy project webapp](images/red5prolive-19-project-webapp.png)
 3. Using a File Browser, navigate to the install directory of Red5 Pro Server
   * For the purposes of this example, the new workspace directory will be __/Users/red5pro-user/red5prolive__
 4. Paste the _red5prolive_ directory into the _/webapps_ directory of the Red5 Pro Server so that the webapp is in the same directory as the other webapps shipped with the Red5 Pro Server - e.g., __live__, __secondscreen__, etc.
+  ![Paste webapp in server](images/red5prolive-20-server-webapp.png)
 5. Start the Red5 Pro Server:
   * On OSX & Linux: Open Terminal, `cd` into your Red5 Pro install directory and issue this command: `./red5.sh`
   * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
 6. In the console output, you should start to see listings for __red5prolive__ webapp:
+  ![Console print](images/red5prolive-21-server-console.png)
 
 Additionally, you can visit [http://localhost:5080/red5prolive/](http://localhost:5080/red5prolive/) and see the default directory listing of the webapp. In the next section we will change this to display a list of streams.
 
@@ -217,6 +223,7 @@ We'll create the __index.jsp__ page which will be the default page shown when na
 1. In the Navigator pane of the Eclipse IDE, right-click on the __/red5prolive_ root directory for the webapp
 2. Select __New > File__
 3. In the _New File_ dialog, enter the following value for the _File name:_ field: __index.jsp__
+  ![New jsp page](images/red5prolive-22-index-jsp.png)
 4. That will create a new __index.jsp__ file and open it in the Eclipse IDE
 5. Add the following code to the __index.jsp__ page:
         <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
@@ -296,6 +303,8 @@ We will deploy the changes we have made to the __Red5ProLive__ webapp to the Red
   * On OSX & Linux: Open Terminal, `cd` into your Red5 Pro install directory and issue this command: `./red5.sh`
   * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
 7. Open a web browser and point to [http://localhost:5080/red5prolive/](http://localhost:5080/red5prolive/)
+
+![Red5ProLive webapp landing](images/red5prolive-23-webpage.png)
 
 You should see the wording `No streams found. Refresh if needed.` displayed, meaning that there are no current streams available. We will start a broadcast session in the next section and refresh to see the changes!
 
