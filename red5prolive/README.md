@@ -59,9 +59,7 @@ Red5ProLive Application
 ===
 When the Red5 Pro Server is run, applications are accessible using a web browser from the default port of __5080__. If you have the Red5 Pro Server currently running on your machine, you can visit [http://localhost:5080](http://localhost:5080) to see the default landing page.
 
-The default landing page and any other web accessbile applications are stored in the _/webapp_ directory of the Red5 Pro server. In this section, we will be creating a new application to be deployed to this directory. We will utilize the _/webapp/template_ shipped with the Red5 Pro Server distribution and create our first Red5 Pro server application.
-
-__TODO: Need to package red5pro-server-template with Red5 Pro server distribution__
+The default landing page and any other web accessbile applications are stored in the _/webapp_ directory of the Red5 Pro server. In this section, we will be creating a new application to be deployed to this directory. We will utilize the _/webapps/template_ shipped with the Red5 Pro Server distribution and create our first Red5 Pro server application.
 
 WebApp
 ---
