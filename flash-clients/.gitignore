@@ -7,3 +7,4 @@ svp-lib-*/bin
 **.settings
 **/asdoc
 
+**/dist
