@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="var" path="RED5_HOME/red5-server.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/red5-io-1.0.6-RELEASE.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/red5-server-common-1.0.6-RELEASE.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/jcl-over-slf4j-1.7.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/jul-to-slf4j-1.7.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/log4j-over-slf4j-1.7.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/slf4j-api-1.7.9.jar"/>
+	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
+</classpath>
