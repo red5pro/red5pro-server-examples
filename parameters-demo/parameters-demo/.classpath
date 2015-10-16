@@ -9,5 +9,5 @@
 	<classpathentry kind="var" path="RED5_HOME/lib/jul-to-slf4j-1.7.9.jar"/>
 	<classpathentry kind="var" path="RED5_HOME/lib/log4j-over-slf4j-1.7.9.jar"/>
 	<classpathentry kind="var" path="RED5_HOME/lib/slf4j-api-1.7.9.jar"/>
-	<classpathentry kind="output" path="parametersdemo/WEB-INF/classes"/>
+	<classpathentry kind="output" path="parameterdemo/WEB-INF/classes"/>
 </classpath>
