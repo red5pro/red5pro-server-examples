@@ -335,7 +335,7 @@ Troubleshooting
 ===
 The following sections may aide in troubleshooting any issues may come across in trying the previous examples.
 
-__If you have further questions, please contact us at [accounts@red5pro.com](accounts@red5pro.com)__
+__If you have further questions, please contact us at [red5pro@infrared5.com](red5pro@infrared5.com)__
 
 ### Required open ports
 The following default ports are required to be open in order to allow for Live Streaming and Second Screen:
