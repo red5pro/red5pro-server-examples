@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="RED5_HOME/red5-server.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/jcl-over-slf4j-1.7.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/jul-to-slf4j-1.7.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/log4j-over-slf4j-1.7.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/mina-core-2.0.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/red5-io-1.0.7-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/red5-server-common-1.0.7-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/slf4j-api-1.7.9.jar"/>
+	<classpathentry kind="var" path="RED5_HOME/lib/spring-core-4.1.7.RELEASE.jar"/>
+	<classpathentry kind="output" path="live/WEB-INF/classes"/>
+</classpath>

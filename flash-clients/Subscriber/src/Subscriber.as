@@ -74,6 +74,7 @@ package
 			if(ExternalInterface.available) {
 				try {
 					ExternalInterface.addCallback("viewStream", handleInvokeViewStream);
+					ExternalInterface.addCallback("resetHost", handleResetHost);
 				}
 				catch(e:Error) {
 					// Not supported. Most likely Security issue.
@@ -117,8 +118,10 @@ package
 		
 		private function restartSubscription():void {
 			
-			stopSubscription();
-			startSubscription();
+			if(netConnection != null && netConnection.connected) {
+				stopSubscription();
+				startSubscription();
+			}
 			
 		}
 		
@@ -170,6 +173,15 @@ package
 				restartSubscription();
 			}
 			
+		}
+		
+		public function handleResetHost(value:String):void {
+			
+			if(this.streamHost != value) {
+				this.streamHost = value;
+				restartSubscription();
+			}
+		
 		}
 		
 		/**

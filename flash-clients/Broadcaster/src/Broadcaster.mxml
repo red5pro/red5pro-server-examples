@@ -286,6 +286,27 @@
 				// Simple binding to enable ability to stream with valid stream name value entry.
 				BindingUtils.bindSetter(invalidateStreamName, this, ['streamNameField', 'text']);
 				
+				if(ExternalInterface.available) {
+					try {
+						ExternalInterface.addCallback("resetHost", handleResetHost);
+					}
+					catch(e:Error) {
+						// Not supported. Most likely Security issue.
+					}
+				}
+				
+			}
+			
+			public function handleResetHost(value:String):void {
+				
+				if(this.streamHost != value) {
+					this.streamHost = value;
+					if(this.netConnection != null && this.netConnection.connected) {
+						this.stopBroadcast();
+						this.startBroadcast();
+					}
+				}
+				
 			}
 			
 			public function onStreamNameFieldFocus():void {
