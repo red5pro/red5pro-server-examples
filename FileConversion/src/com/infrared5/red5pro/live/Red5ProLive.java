@@ -21,7 +21,7 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 	 * Application life-cycle begins here
 	 */
 	public boolean appStart(IScope scope){
-
+		log.info("Red5 Pro File conversion Demo"); 
 		super.appStart(scope);		
 		//Return false to prevent app from starting for any reason
 		return true;
@@ -36,6 +36,8 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 			final String name = stream.getPublishedName();
 			final String theFlv = stream.getSaveFilename();
 			final IScope fileScope = stream.getScope();
+			final String path = fileScope.getContextPath();
+			log.info("path {}",path); 
 			
 			new Thread(new Runnable(){
 
@@ -56,9 +58,32 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 						
 						try {//Get the path for command line.
 							//the recorded file location
-							String inputLocation= "PATH_TO_RED5_ROOT/webapps/live/streams/";
+							//Where is this happening?
+							String where=fileScope.getContextPath();
+							//Remove leading slash
+							if(where.indexOf("/")==0){
+								where=where.substring(1);
+							}
+							//break it down to rooms and remove the separator.
+							String[] paths = where.split("/");
+							//grab the app name from the context.
+							String appName = paths[0];
+							log.info("paths length {}",paths.length);
+
+							//Form the file input location with the app name and streams directory.
+							String inputLocation= "PATH_TO_RED5_ROOT/webapps/"+appName+"/streams/";
+							//Add the rooms path if there is one.
+							for( int i=1;i<paths.length;i++){
+								inputLocation=inputLocation+paths[i]+"/";
+							}
+							//Add the file name to complete the path.
 							String filePath= inputLocation+name+".flv";//or use 'theFlv'
-							String outputLocation = "PATH_TO_RED5_ROOT/webapps/live/";
+							//Form the output path.							
+							String outputLocation = "PATH_TO_RED5_ROOT/webapps/"+appName+"/";
+							//Here you could potentially recreate the context structure of the rooms that we parsed above.
+							//add the room names back onto the path and call makdirs.
+							//File checker = new File(outputLocation);
+							//checker.mkdirs()
 							log.info("Recorded file {}",filePath);
 							String outputFile = outputLocation + name +".mp4";
 							//delete any previous file created, or ffmpeg will complain.
