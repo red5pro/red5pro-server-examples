@@ -162,7 +162,7 @@
 					  horizontalAlign="center"
 					  paddingTop="20" paddingLeft="10"
 					  paddingBottom="20" paddingRight="10">
-			
+				
 				<!-- Video Container -->
 				<s:Group width="320" height="240">
 					<s:Rect width="100%" height="100%">
@@ -187,7 +187,7 @@
 						  enabled="false"
 						  click="toggleBroadcast();"
 						  />
-		
+				
 			</s:VGroup>
 		</s:Group>
 		
@@ -391,6 +391,13 @@
 				netConnection=null;
 				startStreamButton.label = START_BROADCAST;
 				removeEventListener(Event.ENTER_FRAME, onFrame, false);
+				if(ExternalInterface.available) {
+					try{
+						ExternalInterface.call("broadcast.stop");
+					}catch(e:Error){
+						
+					}
+				}
 				
 			}
 			
@@ -424,6 +431,13 @@
 				timeField.text = Number(0).toString();
 				addEventListener(Event.ENTER_FRAME, onFrame, false, 0, true);
 				log("Streaming to: " + rtmpEndpoint + "...");
+				if(ExternalInterface.available) {
+					try{
+						ExternalInterface.call("broadcast.start",{host:rtmpEndpoint,streamName:streamName});
+					}catch(e:Error){
+						
+					}
+				}
 			}
 			
 			protected function onFrame(event:Event):void {
@@ -436,6 +450,14 @@
 			protected function onStatus(event:NetStatusEvent):void {
 				
 				log("" + event.info.code);
+				if(ExternalInterface.available) {
+					try{
+						var rtmpEndpoint:String = "rtmp://" + streamHost + "/live";
+						ExternalInterface.call("broadcast.onStatus",{host:rtmpEndpoint,streamName:streamName, status:"" + event.info.code });
+					}catch(e:Error){
+						
+					}
+				}
 				// Determine event code reference.
 				switch(event.info.code) {
 					
