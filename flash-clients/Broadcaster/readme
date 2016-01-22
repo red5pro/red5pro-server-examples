@@ -1,3 +1,5 @@
+Broadcaster
+===
 The source of the flash Broadcaster used in the server front-end pages can be found here.
 
 The swf file itself can be found in the front-end server repo.
@@ -9,7 +11,7 @@ The swf notifies the webpage for broadcast event life cycle and status.
 
 Below is a simple implementation of a javascript handler with all three methods used by the swf.
 
-```
+```javascript
   var broadcast = {
   	start : function(info){
   	console.log("start "+ info.host+"/"+info.streamName);
