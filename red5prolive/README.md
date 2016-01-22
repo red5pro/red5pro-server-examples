@@ -17,7 +17,7 @@ The Red5 Pro server requires Java 1.7+ or higher. [Install Java 1.7+ or higher](
 4. Start the Red5 Pro server:
   * On OSX & Linux: Open Terminal, `cd` into your Red5 Pro install directory and issue this command: `./red5.sh`
   * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
-5. After the server has started, open a web browser and navigate to [http://localhost:5080](http://localhost:5080)
+5. After the server has started, open a web browser and navigate to <a href="http://localhost:5080/" target="_blank">http://localhost:5080</a>
 6. If the server has started successfully, you should see the default landing page for the Red5 Pro server install
   * The landing page can be found at _/webapps/root/index.jsp_ of your Red5 Pro installation. You can modify or remove it as desired. For now, we will use it to navigate around and demonstrate what the Red5 Pro server can do!
 
