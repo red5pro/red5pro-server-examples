@@ -28,14 +28,14 @@ Below is a simple implementation of a javascript handler with all three methods 
 ```
 
 broadcast.start
-
+====
 Called when the user presses the broadcast button to begin capturing media and sending to the server.
 
 broadcast.stop
-
+====
 Called when the broadcast is terminated via server error or the user presses the button to end capturing media.
 
 broadcast.onStatus
-
+====
 Called any time the client receives a net-status message, such as connection fail/success.
 
