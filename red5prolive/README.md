@@ -52,7 +52,7 @@ The following steps describe how to setup a new project in the [Eclipse IDE](htt
 13. You will be redirected back to the _Java Build Path_ dialog
 14. Repeat Steps 6-11, and select the __/lib/red5-server-common.jar__ from the list and click __OK__
   <p><img src="images/red5prolive-7-variable-red5-server-common.png" alt="Red5 Pro Application" width="320px" height="333px" /></p>
-
+15. Click __Finish__ in the _New Java Project_ dialog once you've selected the libraries
 With our project environment all setup, we can begin developing our first Red5 Pro Server application!
 
 Red5ProLive Application
