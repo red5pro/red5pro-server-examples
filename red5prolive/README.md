@@ -67,13 +67,31 @@ We will use the webapp template shipped with the Red5 Pro Server as a basis for 
 
 1. From the main menu of the Eclipse IDE, select _Window > Show View > Navigator_ and focus on the _Navigator_ view pane in the IDE
   <p><img src="images/red5prolive-8-navigator-view.png" alt="Red5 Pro Application" width="320px" height="378px" /></p>
-2. Using a File Browser, locate the _/webapps/template_ directory from your Red5 Pro server installation
-  * For the purposes of this tutorial, that can be found at __/Users/red5pro-user/red5pro-server/webapps/template__
-3. Drag and drop the _template_ directory onto the root __Red5ProLive__ project in the _Navigator_ pane
-4. Select __Copy files and folders__ from the alert displayed
-  <p><img src="images/red5prolive-9-copy-webapp.png" alt="Red5 Pro Application" width="320px" height="180px" /></p>
-5. Right-click on the _template_ entry under __Red5ProLive__ project in the _Navigator_ pane and select __Rename...__
-6. Rename the imported webapp directory to: __red5prolive__
+2. Right click in the _Navigator_ pane and select __Import...__
+3. In the _Import_ dialog, expand __General__ and select __Archive File__ then click __Next__
+  <p><img src="images/import-archive-file.png"/></p>
+  <p><img src="images/import-from-archive-browse.png"/></p>
+4. Click __Browse__ to select the archive file; this will open the file browse panel
+  <p><img src="images/import-browse.png"/></p>
+5. Browse to the build.zip file, select it and click __Ok__
+6. Click __Browse__ to select the "Into folder"; this will open the project browse panel
+  <p><img src="images/import-project-into-folder.png"/></p>
+7. Select "Red5ProLive" and click __Ok__
+  <p><img src="images/import-finished.png"/></p>
+8. Click __Finish__
+9. Click _Window > Show View > Ant_
+  <p><img src="images/eclipse-ant-panel.png"/></p>
+10. In the _Ant_ panel, click on "Add Buildfiles" icon
+  <p><img src="images/eclipse-ant-panel-add-buildfiles.png"/></p>
+11. In the _Buildfile Selection_ dialog, expand "Red5ProLive" and select "build.xml" then click __Ok__
+
+Get the default project templates
+
+1. In the _Ant_ panel select the script and expand it
+2. Double click the __copy-templates__ item in the list
+3. You will be prompted to enter the path to your Red5 Pro server directory, for the purposes of this tutorial enter __/Users/red5pro-user/red5pro-server/__
+4. Click __Ok__
+5. The path entered will be saved to a local project properties file, so that you won't be prompted for it again. If you more the Red5 Pro server directory, you have to edit your build.properties file
 
 Your workspace should now look like something similar to the following:
 
@@ -128,17 +146,10 @@ With the change to output folder for the class generation, your project workspac
 ### Test Deployment
 We will deploy our webapp to the _/webapps_ directory of the Red5 Pro Server installation to test that everything is set up properly.
 
-1. Using a File Browser, navigate to the __Red5ProLive__ project
-2. Copy the entire _/red5prolive_ directory that we have setup in the previous sections
-  <p><img src="images/red5prolive-19-project-webapp.png" alt="Red5 Pro Application" width="320px" height="96px" /></p>
-3. Using a File Browser, navigate to the install directory of Red5 Pro Server
-  * For the purposes of this example, the new workspace directory will be __/Users/red5pro-user/red5prolive__
-4. Paste the _red5prolive_ directory into the _/webapps_ directory of the Red5 Pro Server so that the webapp is in the same directory as the other webapps shipped with the Red5 Pro Server - e.g., __live__, __secondscreen__, etc.
-  <p><img src="images/red5prolive-20-server-webapp.png" alt="Red5 Pro Application" width="320px" height="132px" /></p>
-5. Start the Red5 Pro Server:
-  * On OSX & Linux: Open Terminal, `cd` into your Red5 Pro install directory and issue this command: `./red5.sh`
-  * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
-6. In the console output, you should start to see listings for __red5prolive__ webapp:
+1. In the _Ant_ panel select the script and expand it, if not already expanded
+2. Double click the __deploy__ item in the list
+3. If Red5 Pro is running, it will be shutdown and restarted after the files are deployed. If its not running, it will be started.
+4. In the console output, you should start to see listings for __red5prolive__ webapp:
   <p><img src="images/red5prolive-21-server-console.png" alt="Red5 Pro Application" width="420px" height="54px" /></p>
 
 Additionally, you can visit [http://localhost:5080/red5prolive/](http://localhost:5080/red5prolive/) and see the default directory listing of the webapp. In the next section we will change this to display a list of streams.
@@ -149,7 +160,8 @@ We'll define the `streamBroadcastStart` method of __Red5ProLive__ that is invoke
 
 1. Open the __Red5ProLive.java__ class in the Eclipse IDE
 2. Add the following `streamBroadcastStart` method to the class:
-        public void streamBroadcastStart(IBroadcastStream stream) {
+```java
+    public void streamBroadcastStart(IBroadcastStream stream) {
 
             IConnection connection = Red5.getConnectionLocal();
             if (connection != null &&  stream != null) {
@@ -159,7 +171,7 @@ We'll define the `streamBroadcastStart` method of __Red5ProLive__ that is invoke
             }
 
         }
-
+```
 When a stream comes into the application from a client, we assign a `streamName` attribute to the __IConnection__ instance. This attribute will be accessed in a later method implementation to return a list of stream names.
 
 getLiveStreams()
@@ -168,51 +180,43 @@ We'll add to the API of the __Red5ProLive__ application in order to access the c
 
 1. Open the __Red5ProLive.java__ class in the Eclipse IDE
 2. Add the following `getLiveStreams` method to the class:
-          public List<String> getLiveStreams() {
-
-            Iterator<IClient> iter = scope.getClients().iterator();
-            List<String> streams = new ArrayList<String>();
-
-            return streams;
-
-          }
-
+```java
+    public List<String> getLiveStreams() {
+        Iterator<IClient> iter = scope.getClients().iterator();
+        List<String> streams = new ArrayList<String>();
+        return streams;
+    }
+```
 3. To access the current streams and their properties, we will iterate through each connected client. Modify the `getLiveStreams` method as such:
-        public List<String> getLiveStreams() {
-
-            Iterator<IClient> iter = scope.getClients().iterator();
-            List<String> streams = new ArrayList<String>();
-
-            THE_OUTER:while(iter.hasNext()) {
-
-              IClient client = iter.next();
-              Iterator<IConnection> cset = client.getConnections().iterator();
-
-              THE_INNER:while(cset.hasNext()) {
+```java
+    public List<String> getLiveStreams() {
+        Iterator<IClient> iter = scope.getClients().iterator();
+        List<String> streams = new ArrayList<String>();
+        THE_OUTER:while(iter.hasNext()) {
+            IClient client = iter.next();
+            Iterator<IConnection> cset = client.getConnections().iterator();
+            THE_INNER:while(cset.hasNext()) {
                 IConnection c = cset.next();
                 if (c.hasAttribute("streamName")) {
-                  if (!c.isConnected()) {
-                    try {
-                      c.close();
-                      client.disconnect();
+                    if (!c.isConnected()) {
+                        try {
+                            c.close();
+                            client.disconnect();
+                        } catch (Exception e) {
+                            // Failure to close/disconnect.
+                        }
+                        continue THE_OUTER;
+                    } 
+                    if (streams.contains(c.getAttribute("streamName").toString())) {
+                        continue THE_INNER;
                     }
-                    catch(Exception e) {
-                      // Failure to close/disconnect.
-                    }
-                    continue THE_OUTER;
-                  }
-
-                  if (streams.contains(c.getAttribute("streamName").toString())) {
-                    continue THE_INNER;
-                  }
-
-                  streams.add(c.getAttribute("streamName").toString());
+                    streams.add(c.getAttribute("streamName").toString());
                 }
-              }
-            }
-
-            return streams;
-        }
+           }
+       }
+       return streams;
+   }
+```
 
 index.jsp
 ---
@@ -224,65 +228,50 @@ We'll create the __index.jsp__ page which will be the default page shown when na
   <p><img src="images/red5prolive-22-index-jsp.png" width="320px" height="356px" /></p>
 4. That will create a new __index.jsp__ file and open it in the Eclipse IDE
 5. Add the following code to the __index.jsp__ page:
-        <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-        <%@ page import="org.springframework.context.ApplicationContext,
-                com.red5pro.server.secondscreen.net.NetworkUtil,
-                org.springframework.web.context.WebApplicationContext,
-                com.red5pro.live.Red5ProLive,
-                java.util.List,
-                java.net.Inet4Address"%>
-
-        <%
-
-          String ip =  NetworkUtil.getLocalIpAddress();
-          ApplicationContext appCtx = (ApplicationContext) application.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-          Red5ProLive service = (Red5ProLive) appCtx.getBean("web.handler");
-
-          List<String> streamNames = service.getLiveStreams();
-          StringBuffer buffer = new StringBuffer();
-
-          if(streamNames.size() == 0) {
-            buffer.append("No streams found. Refresh if needed.");
-          }
-          else {
-            buffer.append("<ul>\n");
-            for (String streamName:streamNames) {
-              buffer.append("<li><a>" + streamName + " on " + ip + "</a></li>\n");
-            }
-            buffer.append("</ul>\n");
-          }
-
-         %>
-
-        <!doctype html>
-        <html>
-        <body>
-          <div>
-            <h1>Streams on Red5ProLive</h1>
-            <%=buffer.toString()%>
-          </div>
-          <hr>
-          <div>
-            <h2>Start a broadcast session on your device to see it listed!</h2>
-            <p>In the Settings dialog of the <a href="https://github.com/red5pro">Red5 Pro Application</a> enter these values:</p>
-            <table>
-              <tr>
-                <td>Server</td>
-                <td><b><%=ip%></b></td>
-              </tr>
-              <tr>
-                <td>App Name</td>
-                <td><b>red5prolive</b></td>
-              </tr>
-              <tr>
-                <td>Stream Name</td>
-                <td><b>helloWorld</b></td>
-              </tr>
-            </table>
-          </div>
-        </body>
-        </html>
-
+```xml
+  <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+  <%@ page import="org.springframework.context.ApplicationContext,
+                   com.red5pro.server.secondscreen.net.NetworkUtil,
+                   org.springframework.web.context.WebApplicationContext,
+                   com.red5pro.live.Red5ProLive,
+                   java.util.List,
+                   java.net.Inet4Address"%>
+  <%
+    String ip =  NetworkUtil.getLocalIpAddress();
+    ApplicationContext appCtx = (ApplicationContext) application.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+    Red5ProLive service = (Red5ProLive) appCtx.getBean("web.handler");
+    List<String> streamNames = service.getLiveStreams();
+    StringBuffer buffer = new StringBuffer();
+    if (streamNames.size() == 0) {
+        buffer.append("No streams found. Refresh if needed.");
+    } else {
+        buffer.append("<ul>\n");
+        for (String streamName:streamNames) {
+            buffer.append("<li><a>" + streamName + " on " + ip + "</a></li>\n");
+        }
+        buffer.append("</ul>\n");
+    }
+  %>
+  <!doctype html>
+  <html>
+    <body>
+      <div>
+        <h1>Streams on Red5ProLive</h1>
+        <%=buffer.toString()%>
+      </div>
+      <hr>
+      <div>
+        <h2>Start a broadcast session on your device to see it listed!</h2>
+        <p>In the Settings dialog of the <a href="https://github.com/red5pro">Red5 Pro Application</a> enter these values:</p>
+        <table>
+          <tr><td>Server</td><td><b><%=ip%></b></td></tr>
+          <tr><td>App Name</td><td><b>red5prolive</b></td></tr>
+          <tr><td>Stream Name</td><td><b>helloWorld</b></td></tr>
+        </table>
+      </div>
+    </body>
+  </html>
+```
 In the script preceding the document declaration, the __Red5ProLive__ instance is invoked to return a list of stream names from the `getLiveStreams` method we added previously. If the list has at least one live stream currently, it will list the stream names in an unordered list element on the page.
 
 Additionally, there are further instructions to follow in order to see a published stream from the [Red5 Pro Application](https://github.com/red5pro) installed on your device.
@@ -291,16 +280,12 @@ Deploying
 ---
 We will deploy the changes we have made to the __Red5ProLive__ webapp to the Red5 Pro Server installation.
 
-1. Using a File Browser, navigate to the __Red5ProLive__ project
-2. Copy the entire _/red5prolive_ directory that we have setup in the previous sections
-3. Using a File Browser, navigate to the install directory of Red5 Pro Server
-  * For the purposes of this example, the new workspace directory will be __/Users/red5pro-user/red5prolive__
-4. If the directory names _red5prolive_ exists, delete it
-5. Paste the _red5prolive_ directory into the _/webapps_ directory of the Red5 Pro Server so that the webapp is in the same directory as the other webapps shipped with the Red5 Pro Server - e.g., __live__, __secondscreen__, etc.
-6. Start the Red5 Pro Server:
-  * On OSX & Linux: Open Terminal, `cd` into your Red5 Pro install directory and issue this command: `./red5.sh`
-  * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
-7. Open a web browser and point to [http://localhost:5080/red5prolive/](http://localhost:5080/red5prolive/)
+1. In the _Ant_ panel select the script and expand it, if not already expanded
+2. Double click the __deploy__ item in the list
+3. If Red5 Pro is running, it will be shutdown and restarted after the files are deployed. If its not running, it will be started.
+4. In the console output, you should start to see listings for __red5prolive__ webapp:
+  <p><img src="images/red5prolive-21-server-console.png" alt="Red5 Pro Application" width="420px" height="54px" /></p>
+5. Open a web browser and point to [http://localhost:5080/red5prolive/](http://localhost:5080/red5prolive/)
 
 <p><img src="images/red5prolive-23-webpage.png" alt="Red5 Pro Application" width="320px" height="281px" /></p>
 
