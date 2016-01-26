@@ -25,3 +25,31 @@ ClusterLoadBalancer
 	}
 
 ````
+
+Red5 Pro contains a servlet to call to get the ip. Make sure the servlet is defined in your web.xml file.
+
+````java
+        <servlet>
+
+            <servlet-name>cluster</servlet-name>
+
+            <servlet-class>
+
+                com.red5pro.cluster.plugin.agent.ClusterWebService
+
+            </servlet-class>
+
+            <load-on-startup>2</load-on-startup>
+
+        </servlet>
+
+     
+
+        <servlet-mapping>
+
+            <servlet-name>cluster</servlet-name>
+
+            <url-pattern>/cluster</url-pattern>
+
+        </servlet-mapping>
+````
