@@ -16,7 +16,21 @@
 		<param-name>webAppRootKey</param-name>
 		<param-value>/live</param-value>
 	</context-param>
-     
+	<!-- The round robin servlet which calls the imlementation-->
+        <servlet>
+            <servlet-name>cluster</servlet-name>
+            <servlet-class>
+                com.red5pro.cluster.plugin.agent.ClusterWebService
+            </servlet-class>
+            <load-on-startup>-1</load-on-startup>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>cluster</servlet-name>
+            <url-pattern>/cluster</url-pattern>
+        </servlet-mapping> 
+        
+        
+        
    	<servlet>
 		<servlet-name>rtmpt</servlet-name>
 		<servlet-class>org.red5.server.net.rtmpt.RTMPTServlet</servlet-class>
