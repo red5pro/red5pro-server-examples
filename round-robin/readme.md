@@ -27,6 +27,7 @@ ClusterLoadBalancer
 ````
 
 Red5 Pro contains a servlet to call to get the ip. Make sure the servlet is defined in your web.xml file.
+This demo app has it defined.
 
 ````java
         <servlet>
@@ -53,3 +54,4 @@ Red5 Pro contains a servlet to call to get the ip. Make sure the servlet is defi
 
         </servlet-mapping>
 ````
+You will need to link to the red5 pro jar and the red5 clustering jar.
