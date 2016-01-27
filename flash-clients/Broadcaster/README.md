@@ -2,9 +2,7 @@ Broadcaster
 ===
 The source of the flash Broadcaster used in the server front-end pages can be found here.
 
-The swf file itself can be found in the front-end server repo.
-
-https://github.com/red5pro/red5pro-server-frontend/tree/master/src/webapps/live
+The swf file itself can be found in the [front-end server repo](https://github.com/red5pro/red5pro-server-frontend/tree/master/src/webapps/live).
 
 You can integrate this broadcaster in your html5 web application using the javascript call-outs.
 The swf notifies the webpage for broadcast event life cycle and status.
@@ -38,4 +36,3 @@ Called when the broadcast is terminated via server error or the user presses the
 broadcast.onStatus
 ====
 Called any time the client receives a net-status message, such as connection fail/success.
-
