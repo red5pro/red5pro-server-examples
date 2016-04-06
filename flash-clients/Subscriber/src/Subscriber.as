@@ -42,7 +42,7 @@ package
 				app = loaderInfo.parameters.app;
 			}
 			if(loaderInfo.parameters.buffer) {
-				bufferLength = loaderInfo.parameters.buffer
+				bufferLength = loaderInfo.parameters.buffer;
 			}
 			
 			init();
@@ -50,6 +50,7 @@ package
 		}
 		
 		private function init():void {
+			
 			
 			var endpoint:String = "rtmp://" + streamHost + "/" + app;
 			
@@ -127,7 +128,7 @@ package
 		
 		private function rotateAroundCenter (videoDisplay:Video, angleDegrees:Number):void {
 			
-			var point:Point = new Point(videoDisplay.x + videoDisplay.width / 2, videoDisplay.y + videoDisplay.height / 2); 
+			var point:Point = new Point(videoDisplay.width / 2, videoDisplay.height / 2); 
 			var m:Matrix = videoDisplay.transform.matrix;
 			m.tx -= point.x;
 			m.ty -= point.y;
@@ -135,6 +136,7 @@ package
 			m.tx += point.x;
 			m.ty += point.y;
 			videoDisplay.transform.matrix = m;
+			videoDisplay.rotation = Math.round(videoDisplay.rotation);
 			
 		}
 		
@@ -199,9 +201,34 @@ package
 				if(t == "orientation") {
 					var rotation:int = parseInt(obj[t]);
 					video.rotation=0;
-					video.x=0;
-					video.y=40;
+					video.x = (this.stage.width-video.width)*0.5;
+					video.y = (this.stage.height-video.height)*0.5;
 					rotateAroundCenter(video, rotation);
+				}
+				
+				
+				if(t=="resolution"){
+					
+					var dimens:Array = obj[t].split(",");
+					var w:int = parseInt(dimens[0]);
+					var h:int = parseInt(dimens[1]);
+					
+					//undo rotation, resize, reapply rotation
+					
+					var rotate:Number = video.rotation;
+					
+					rotateAroundCenter(video, -rotate);
+					
+					video.x = (this.stage.width-video.width)*0.5;
+					video.y = (this.stage.height-video.height)*0.5;
+					
+					var scale : Number = Math.min(this.stage.width/w, this.stage.height/h);
+					
+					video.width = w * scale;
+					video.height = h * scale;
+					
+					rotateAroundCenter(video, rotate);
+					
 				}
 			}
 			
