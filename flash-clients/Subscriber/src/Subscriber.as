@@ -1,17 +1,18 @@
 package
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.NetStatusEvent;
 	import flash.external.ExternalInterface;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.media.Video;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import flash.utils.setTimeout;
 	
 	[SWF(width=340, height=280, backgroundColor=0x000)]
 	public class Subscriber extends Sprite {
@@ -126,19 +127,42 @@ package
 			
 		}
 		
-		private function rotateAroundCenter (videoDisplay:Video, angleDegrees:Number):void {
+		public function center(ob:DisplayObject):void{
 			
-			var point:Point = new Point(videoDisplay.width / 2, videoDisplay.height / 2); 
-			var m:Matrix = videoDisplay.transform.matrix;
-			m.tx -= point.x;
-			m.ty -= point.y;
-			m.rotate(angleDegrees * (Math.PI / 180));
-			m.tx += point.x;
-			m.ty += point.y;
-			videoDisplay.transform.matrix = m;
-			videoDisplay.rotation = Math.round(videoDisplay.rotation);
+			var rect:Rectangle = ob.getBounds(ob.parent);
 			
+			var stageCenter : Point = new Point(this.stage.stageWidth*0.5, this.stage.stageHeight*0.5); 
+			var rectCenter : Point = new Point(rect.left+rect.width*0.5, rect.top+rect.height*0.5);
+			
+			var m:Matrix=ob.transform.matrix;
+			m.translate(stageCenter.x-rectCenter.x, stageCenter.y-rectCenter.y);
+			ob.transform.matrix = m;
 		}
+		
+		public function scaleVideo(ob:DisplayObject):void{
+			
+			var rect:Rectangle = ob.getBounds(ob.parent);
+
+			var s : Number = Math.min(this.stage.stageWidth/rect.width, this.stage.stageHeight/rect.height);
+			
+			var m:Matrix=ob.transform.matrix;
+			m.scale(s, s);
+			ob.transform.matrix = m;
+		}
+		
+		public function rotateAroundCenter (ob:DisplayObject, angleDegrees:Number):void {
+			
+			var rect:Rectangle = ob.getBounds(ob.parent);
+			
+			var m:Matrix=ob.transform.matrix;
+			m.translate(-(rect.left + (rect.width / 2)), -(rect.top + (rect.height / 2)));
+			m.rotate (angleDegrees*(Math.PI/180));
+			m.translate(rect.left + (rect.width / 2), rect.top + (rect.height / 2));
+			ob.transform.matrix=m;
+			ob.rotation = Math.round(ob.rotation);
+		}  
+		
+
 		
 		private function onFrame(event:Event):void {
 			
@@ -195,42 +219,38 @@ package
 		
 		public function onMetaData(obj:Object):void {
 			
-			var t:String;
-			for(t in obj ) {
-				// If rotation instruction has come in on metadata, handle
-				if(t == "orientation") {
-					var rotation:int = parseInt(obj[t]);
-					video.rotation=0;
-					video.x = (this.stage.width-video.width)*0.5;
-					video.y = (this.stage.height-video.height)*0.5;
-					rotateAroundCenter(video, rotation);
-				}
+			var rotation : int = 0;
+			var w:int = video.width;
+			var h:int = video.height;
+			
+			for(var t:String in obj ){
 				
+				if(t == "orientation") {
+					rotation = parseInt(obj[t]);
+				}
 				
 				if(t=="resolution"){
-					
 					var dimens:Array = obj[t].split(",");
-					var w:int = parseInt(dimens[0]);
-					var h:int = parseInt(dimens[1]);
-					
-					//undo rotation, resize, reapply rotation
-					
-					var rotate:Number = video.rotation;
-					
-					rotateAroundCenter(video, -rotate);
-					
-					video.x = (this.stage.width-video.width)*0.5;
-					video.y = (this.stage.height-video.height)*0.5;
-					
-					var scale : Number = Math.min(this.stage.width/w, this.stage.height/h);
-					
-					video.width = w * scale;
-					video.height = h * scale;
-					
-					rotateAroundCenter(video, rotate);
-					
+					w = parseInt(dimens[0]);
+					h = parseInt(dimens[1]);
 				}
+				
 			}
+			
+			//reset transform matrix and position in center screen
+			var m: Matrix = new Matrix();
+			
+			video.transform.matrix = m;
+			
+			video.width = w;
+			video.height = h;
+			
+			rotateAroundCenter(video, rotation);
+			scaleVideo(video);
+			
+			
+			center(video);	
+			
 			
 		}
 	}
