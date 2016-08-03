@@ -2,7 +2,7 @@ Creating Your First Red5 Pro Server Application
 ===
 In this tutorial, we will walk through the steps to creating your first Red5 Pro Server Application: a service that captures all the available streams currently live on a Red5 Pro server!
 
-If you have not done so already, start an account at [https://account.red5pro.com](https://account.red5pro.com). The Developer account allows for up to 10 concurrent connections, while the Enterprise license has no connection limit.
+If you have not done so already, start an account at [https://account.red5pro.com](https://account.red5pro.com). The Developer account allows for up to 10 concurrent connections, while the Pro license has no connection limit.
 
 Requirements
 ---
@@ -13,7 +13,7 @@ The Red5 Pro server requires Java 1.7+ or higher. [Install Java 1.7+ or higher](
 
 1. Download the Red5 Pro server from [the downloads section](https://account.red5pro.com/download) of the Red5 Pro Accounts site.
 2. Unzip into a location on your local system. For the purposes of this tutorial, we will unzip the Red5 Pro server to: _/Users/red5pro-user/red5pro_.
-3. __Optional__: [Add your Red5 Pro license](http://link-to-tutorial), if you have signed up for the Enterprise account.
+3. __Optional__: [Add your Red5 Pro license](http://link-to-tutorial), if you have signed up for the Pro account.
 4. Start the Red5 Pro server:
   * On OSX & Linux: Open Terminal, `cd` into your Red5 Pro install directory and issue this command: `./red5.sh`
   * On Windows: Navigate to the Red5 Pro install directory in a File Browser and double-click on `red5.bat`
