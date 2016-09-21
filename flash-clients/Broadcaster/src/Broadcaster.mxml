@@ -236,6 +236,9 @@
 			
 			private var streamName:String;
 			private var streamHost:String = "localhost";
+			private var streamType:String = "live";
+			
+			private static const STREAM_TYPE:Array = ["live", "record"];
 			
 			private var quality:String = RESOLUTION_MID;
 			private var useHigherQuality:Boolean = false;
@@ -262,6 +265,13 @@
 				// e.g, http://localhost:5080/live/broadcast.jsp?host=10.0.0.1
 				if(loaderInfo.parameters.host) {
 					streamHost = loaderInfo.parameters.host;
+				}
+				
+				if (loaderInfo.parameters.streamType) {
+					var st:String = loaderInfo.parameters.streamType;
+					if (STREAM_TYPE.indexOf(st) > -1) {
+						streamType = st;
+					}
 				}
 				
 				// Enable input fields as we have basic criteria
@@ -495,7 +505,7 @@
 						
 						netStream.videoStreamSettings = h264settings;	
 						netStream.attachAudio(microphone);							
-						netStream.publish(streamName);
+						netStream.publish(streamName, streamType);
 						log("Publishing as stream name '" + streamName + "'...");
 						
 						break;
