@@ -140,6 +140,30 @@
 				
 				<s:Label width="100%"
 						 styleName="header"
+						 text="Enable Recording of the Stream (for VOD)?"
+						 />
+				<!-- Upstream Buffer -->
+				<s:CheckBox id="recordCheck"
+							width="100%"
+							label="Enable Recording"
+							enabled="false"
+							selected="false"
+							/>
+			</s:VGroup>
+		</s:Group>
+		
+		<s:Group width="100%">
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="#e3e3e3" />
+				</s:fill>
+			</s:Rect>
+			<s:VGroup width="100%"
+					  paddingTop="10" paddingLeft="10"
+					  paddingBottom="10" paddingRight="10">
+				
+				<s:Label width="100%"
+						 styleName="header"
 						 text="Buffer upstream buffer before sending?"
 						 />
 				<!-- Upstream Buffer -->
@@ -221,7 +245,6 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import flash.utils.setTimeout;
 			
 			import mx.binding.utils.BindingUtils;
 			import mx.controls.Alert;
@@ -235,10 +258,13 @@
 			private var microphone:Microphone;
 			
 			private var streamName:String;
+			private var context:String = "live";
 			private var streamHost:String = "localhost";
-			private var streamType:String = "live";
+			private var streamType:String = STREAM_TYPE_LIVE;
 			
-			private static const STREAM_TYPE:Array = ["live", "record"];
+			private static const STREAM_TYPE_LIVE:String = "live";
+			private static const STREAM_TYPE_RECORD:String = "record";
+			private static const STREAM_TYPE:Array = [STREAM_TYPE_LIVE, STREAM_TYPE_RECORD];
 			
 			private var quality:String = RESOLUTION_MID;
 			private var useHigherQuality:Boolean = false;
@@ -267,6 +293,10 @@
 					streamHost = loaderInfo.parameters.host;
 				}
 				
+				if (loaderInfo.parameters.context) {
+					context = loaderInfo.parameters.context;
+				}
+				
 				if (loaderInfo.parameters.streamType) {
 					var st:String = loaderInfo.parameters.streamType;
 					if (STREAM_TYPE.indexOf(st) > -1) {
@@ -277,7 +307,11 @@
 				// Enable input fields as we have basic criteria
 				streamNameField.enabled = true;
 				resolutionGroup.enabled = true;
+				recordCheck.enabled = true;
 				bufferCheck.enabled = true;
+				
+				recordCheck.selected = (streamType == STREAM_TYPE_RECORD);
+				
 				// Default AMF encoding.
 				NetConnection.defaultObjectEncoding = ObjectEncoding.AMF0;
 				
@@ -434,7 +468,7 @@
 				netConnection.client = this;
 				netConnection.addEventListener(NetStatusEvent.NET_STATUS, onStatus, false, 0, true);
 				// 'live' is our endpoint from the Red5 Pro Server webapps.
-				rtmpEndpoint = "rtmp://" + streamHost + "/live";
+				rtmpEndpoint = "rtmp://" + this.streamHost + "/" + this.context;
 				netConnection.connect(rtmpEndpoint);
 				
 				startStreamButton.label = STOP_BROADCAST;
@@ -462,8 +496,8 @@
 				log("" + event.info.code);
 				if(ExternalInterface.available) {
 					try{
-						var rtmpEndpoint:String = "rtmp://" + streamHost + "/live";
-						ExternalInterface.call("broadcast.onStatus",{host:rtmpEndpoint,streamName:streamName, status:"" + event.info.code });
+						var rtmpEndpoint:String = "rtmp://" + this.streamHost + "/" + this.context;
+						ExternalInterface.call("broadcast.onStatus",{host: rtmpEndpoint, streamName: this.streamName, status: "" + event.info.code});
 					}catch(e:Error){
 						
 					}
@@ -486,6 +520,10 @@
 						netStream.attachCamera(camera);
 						netStream.addEventListener(NetStatusEvent.NET_STATUS, onStatus, false);
 						
+						if(recordCheck.selected) {
+							this.streamType = STREAM_TYPE_RECORD;
+						}
+						
 						if(quality == RESOLUTION_LOW) {
 							h264settings = setUpLowQualityBroadcast();
 						}
@@ -506,7 +544,7 @@
 						netStream.videoStreamSettings = h264settings;	
 						netStream.attachAudio(microphone);							
 						netStream.publish(streamName, streamType);
-						log("Publishing as stream name '" + streamName + "'...");
+						log("Publishing as stream name '" + this.streamName + "'...");
 						
 						break;
 					
@@ -536,6 +574,7 @@
 				if(bufferCheck.selected) {
 					netStream.bufferTime = 1;
 				}
+				
 				microphone.encodeQuality = 4;
 				return h264settings;
 				
