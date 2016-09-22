@@ -235,6 +235,7 @@
 			private var microphone:Microphone;
 			
 			private var streamName:String;
+			private var context:String = "live";
 			private var streamHost:String = "localhost";
 			private var streamType:String = "live";
 			
@@ -265,6 +266,10 @@
 				// e.g, http://localhost:5080/live/broadcast.jsp?host=10.0.0.1
 				if(loaderInfo.parameters.host) {
 					streamHost = loaderInfo.parameters.host;
+				}
+				
+				if (loaderInfo.parameters.context) {
+					context = loaderInfo.parameters.context;
 				}
 				
 				if (loaderInfo.parameters.streamType) {
@@ -434,7 +439,7 @@
 				netConnection.client = this;
 				netConnection.addEventListener(NetStatusEvent.NET_STATUS, onStatus, false, 0, true);
 				// 'live' is our endpoint from the Red5 Pro Server webapps.
-				rtmpEndpoint = "rtmp://" + streamHost + "/live";
+				rtmpEndpoint = "rtmp://" + this.streamHost + "/" + this.context;
 				netConnection.connect(rtmpEndpoint);
 				
 				startStreamButton.label = STOP_BROADCAST;
@@ -462,8 +467,8 @@
 				log("" + event.info.code);
 				if(ExternalInterface.available) {
 					try{
-						var rtmpEndpoint:String = "rtmp://" + streamHost + "/live";
-						ExternalInterface.call("broadcast.onStatus",{host:rtmpEndpoint,streamName:streamName, status:"" + event.info.code });
+						var rtmpEndpoint:String = "rtmp://" + this.streamHost + "/" + this.context;
+						ExternalInterface.call("broadcast.onStatus",{host: rtmpEndpoint, streamName: this.streamName, status: "" + event.info.code});
 					}catch(e:Error){
 						
 					}
@@ -506,7 +511,7 @@
 						netStream.videoStreamSettings = h264settings;	
 						netStream.attachAudio(microphone);							
 						netStream.publish(streamName, streamType);
-						log("Publishing as stream name '" + streamName + "'...");
+						log("Publishing as stream name '" + this.streamName + "'...");
 						
 						break;
 					
