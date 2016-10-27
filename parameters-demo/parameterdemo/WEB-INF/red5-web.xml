@@ -20,7 +20,9 @@
 		<property name="virtualHosts" value="${webapp.virtualHosts}" />
 	</bean>
 	
-	<!-- Replace this class value with your handler. -->
-	<bean id="web.handler" class="demo.red5pro.parameters.security.ParameterDemo" />
+    <!-- Replace this class value with your handler. -->
+    <bean id="web.handler" class="demo.red5pro.parameters.security.Red5ProLive">
+    		<property name="secret" value="secret" />
+    </bean>
 
 </beans>

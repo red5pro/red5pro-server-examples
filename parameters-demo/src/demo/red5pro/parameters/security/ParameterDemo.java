@@ -9,6 +9,9 @@ import org.red5.server.api.stream.IStreamPublishSecurity;
 
 
 public class ParameterDemo extends MultiThreadedApplicationAdapter implements IStreamPlaybackSecurity, IStreamPublishSecurity {
+	
+	private String secret = "some_secret_value";
+	
 	public boolean appStart(IScope scope){
 
 		super.appStart(scope);		
@@ -36,7 +39,7 @@ public class ParameterDemo extends MultiThreadedApplicationAdapter implements IS
 	private boolean validateParameters(Object[] params) {
 		
 		if(params.length>0){
-			if("some_secret_value".equals(params[0].toString())){
+			if(secret.equals(params[0].toString())){
 				return true;
 			}
 		}
@@ -75,5 +78,11 @@ public class ParameterDemo extends MultiThreadedApplicationAdapter implements IS
 		if(badClient)
 			Red5.getConnectionLocal().close();
 		return true;
+	}
+	public String getSecret() {
+		return secret;
+	}
+	public void setSecret(String secret) {
+		this.secret = secret;
 	}
 }
