@@ -20,6 +20,10 @@ The return should look like  "digest-time", and should be split by omitting the 
 
 Use the generation paramters together with the time and digest returned to complete the connection set.
 
+Flash example for publisher:
+
+_nc.connect("rtmp://localhost/live","andy","publisher1","publish", new String(1477539631925) , "9a597af4464c6b0589bf3f1af3376483d78655f7e08b0bc4119f8feff2225d6a "); 
+
 TODO
 ===
 set up ssl cert for your server.
