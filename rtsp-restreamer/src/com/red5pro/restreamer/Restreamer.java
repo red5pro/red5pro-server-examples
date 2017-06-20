@@ -14,7 +14,7 @@ import com.red5pro.server.stream.util.restreamer.RTSPCameraClient;
 
 
 /**
- * This example application adapter illustrates some of the most commonly used overrides.
+ * This example application adapter illustrates using the rtsp client.
  * @author Andy Shaules
  *
  */
@@ -28,12 +28,12 @@ public class Restreamer extends MultiThreadedApplicationAdapter {
 
 		super.appStart(scope);
 
-		//RTSP restreamer usage
-		// We have two threads. One which is pulling from the ip camera, 
-		// and another which is pushing through the braodcast stream.
+		// RTSP re-streamer usage
+		// We have two threads, one which is pulling from the ip camera, 
+		// and another which is pushing through the broadcast stream.
 		// The RTSPCameraClient requires a ClientHandler to be useful.
-		// We create a generic instance in-line.
-		//Here is the first thread. 
+		// We create a generic instance of the ClientHandler in-line.
+		// Here is the first thread. 
 		new Thread(new Runnable(){
 
 
@@ -82,7 +82,7 @@ public class Restreamer extends MultiThreadedApplicationAdapter {
 						
 					}});
 				
-				// Here is the second thread actually which drives the RTSPCameraClient
+				// Here is the second thread which actually drives the RTSPCameraClient
 				Thread thread = new Thread(test);
 				// Before negotiation with the camera for media, 
 				// we prepare the broadcast stream to make the media available to subscribers.
