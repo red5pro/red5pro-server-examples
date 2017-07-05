@@ -73,7 +73,7 @@ We will use the webapp template shipped with the Red5 Pro Server as a basis for 
   <p><img src="images/import-from-archive-browse.png"/></p>
 4. Click __Browse__ to select the archive file; this will open the file browse panel
   <p><img src="images/import-browse.png"/></p>
-5. Browse to the build.zip file, select it and click __Ok__
+5. Browse to the [build.zip](build.zip) file, select it and click __Ok__
 6. Click __Browse__ to select the "Into folder"; this will open the project browse panel
   <p><img src="images/import-project-into-folder.png"/></p>
 7. Select "Red5ProLive" and click __Ok__
