@@ -5,39 +5,46 @@
 #include "cauldron_test.h"
 
 
-//using namespace cv;
 
-static void OverlayImage(Mat* src, Mat* overlay, const Point& location)
+
+
+//Factory Methods the shared library exports.
+
+extern "C"
 {
-	for (int y = max(location.y, 0); y < src->rows; ++y)
+	DLLEXPORT uint32_t GetGuid()
 	{
-		int fY = y - location.y;
+		return 'M' | ('A' << 8) | ('S' << 16) | ('K' << 24);
+	}
 
-		if (fY >= overlay->rows)
-			break;
 
-		for (int x = max(location.x, 0); x < src->cols; ++x)
-		{
-			int fX = x - location.x;
 
-			if (fX >= overlay->cols)
-				break;
+	DLLEXPORT CVideoProcessModule* CreateVideoProcessor()
+	{
+		std::cout << "Create facemask processor \n";
+		return new TestProcessor();
+	}
 
-			double opacity = ((double)overlay->data[fY * overlay->step + fX * overlay->channels() + 3]) / 255;
 
-			for (int c = 0; opacity > 0 && c < src->channels(); ++c)
-			{
-				unsigned char overlayPx = overlay->data[fY * overlay->step + fX * overlay->channels() + c];
-				unsigned char srcPx = src->data[y * src->step + x * src->channels() + c];
-				src->data[y * src->step + src->channels() * x + c] = srcPx * (1. - opacity) + overlayPx * opacity;
-			}
-		}
+
+	DLLEXPORT void DestroyVideoProcessor(CVideoProcessModule* processor)
+	{
+		std::cout << "Destroy facemask processor \n";
+		delete processor;
 	}
 }
 
+
+
+
 uint32_t TestProcessor::get_guid() {
-	return 'M' | ('A'<<8) | ('S'<<16) | ('K'<<24);
+	return 'M' | ('A' << 8) | ('S' << 16) | ('K' << 24);
 }
+
+
+
+
+
 
 uint32_t TestProcessor::open(uint16_t width, uint16_t height, uint8_t *type, uint8_t *timing, uint8_t *format, uint8_t *return_type)
 { 
@@ -64,26 +71,14 @@ uint32_t TestProcessor::open(uint16_t width, uint16_t height, uint8_t *type, uin
 	this->return_type = *return_type = PROCESS_RETURN_IMAGE;
 
 	this->errors = 0;	
-	//if (!face_cascade.load(face_cascade_name)) {
-	//	printf("CFaceDetectingProcessModule::open %s\n", face_cascade_name.c_str());
-	//	this->errors = 1;
-	//}//X:\red5pro\red5pro-server-RPRO-4268\plugins\native
-	//mask_mat = imread("X:/red5pro/red5pro-server-RPRO-4268/plugins/native/mask.png\0", CV_LOAD_IMAGE_UNCHANGED);
-	//if (mask_mat.data)	{
-	//	printf("Loaded png \n");
-	//}
 
 	return 0;
 }
-//resolution change midstream. re-allocate assets. 
-uint32_t TestProcessor::reinit(uint16_t width, uint16_t height)
-{
-	std::cout << "reinit \n";
-	this->width = width;
-	this->height = height;
-	has_face = 0;
-	return 0;
-}
+
+
+
+
+
 //apply a key/value property to the processor. 
 uint32_t TestProcessor::apply(const char* key, const char* value)
 {
@@ -120,6 +115,10 @@ uint32_t TestProcessor::apply(const char* key, const char* value)
 
 	return 0;
 }
+
+
+
+
 //called with decoded image. Do a transform in-place to the data pointer.
 //Return 0 if there is no frame available yet.
 //Change the time value if the output time differs from the input time. 
@@ -144,12 +143,8 @@ uint32_t TestProcessor::process(uint8_t *data, uint32_t size, uint32_t* time)
 
 	return 1;//image returned
 }
-//free resources.
-uint32_t TestProcessor::close()
-{
-	std::cout << "close \n";
-	return 0;
-}
+
+
 
 void TestProcessor::rotate(Mat& src)
 {
@@ -162,6 +157,8 @@ void TestProcessor::rotate(Mat& src)
 	M.release();
 
 }
+
+
 
 void TestProcessor::detectAndDraw(Mat& img)
 {
@@ -250,20 +247,60 @@ void TestProcessor::detectAndDraw(Mat& img)
 }
 
 
-extern "C"
+
+
+
+
+static void OverlayImage(Mat* src, Mat* overlay, const Point& location)
 {
-	DLLEXPORT uint32_t GetGuid()
+	for (int y = max(location.y, 0); y < src->rows; ++y)
 	{
-		return 'M' | ('A' << 8) | ('S' << 16) | ('K' << 24);
-	}
-	DLLEXPORT CVideoProcessModule* CreateVideoProcessor()
-	{
-		std::cout << "Create facemask processor \n";
-		return new TestProcessor();
-	}
-	DLLEXPORT void DestroyVideoProcessor(CVideoProcessModule* processor)
-	{
-		std::cout << "Destroy facemask processor \n";
-		delete processor;
+		int fY = y - location.y;
+
+		if (fY >= overlay->rows)
+			break;
+
+		for (int x = max(location.x, 0); x < src->cols; ++x)
+		{
+			int fX = x - location.x;
+
+			if (fX >= overlay->cols)
+				break;
+
+			double opacity = ((double)overlay->data[fY * overlay->step + fX * overlay->channels() + 3]) / 255;
+
+			for (int c = 0; opacity > 0 && c < src->channels(); ++c)
+			{
+				unsigned char overlayPx = overlay->data[fY * overlay->step + fX * overlay->channels() + c];
+				unsigned char srcPx = src->data[y * src->step + x * src->channels() + c];
+				src->data[y * src->step + src->channels() * x + c] = srcPx * (1. - opacity) + overlayPx * opacity;
+			}
+		}
 	}
 }
+
+
+
+
+
+
+//resolution change midstream. re-allocate assets. 
+uint32_t TestProcessor::reinit(uint16_t width, uint16_t height)
+{
+	std::cout << "reinit \n";
+	this->width = width;
+	this->height = height;
+	has_face = 0;
+	return 0;
+}
+
+
+
+
+//free resources.
+uint32_t TestProcessor::close()
+{
+	std::cout << "close \n";
+	return 0;
+}
+
