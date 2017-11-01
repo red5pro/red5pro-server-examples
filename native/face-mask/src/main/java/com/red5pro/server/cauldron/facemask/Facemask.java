@@ -58,25 +58,42 @@ public class Facemask extends Red5Plugin implements MediaProcessorAware{
 	/**process parameters for native code.*/
 	private Brewery brewery;
 	
+	
+	/**
+	 * 1) We add ourself as a ProcessAwareListener
+	 */
 	public Facemask(){
+		
 		MediaProcessor.addProcessListener(this);
 	}
 
+	
+	/**
+	 * Our red5 plugin name
+	 */
 	public String getName(){
 		return "Facemask";
 	}
 
+	
+	/**
+	 * Red5 Plugin Start is called. 
+	 */
 	public void doStart(){
 
 		try {
-
+			//look up our XML configuratiion
 			configContext = new FileSystemXmlApplicationContext(new String[] { "/${red5.root}/plugins/native/facemask/module-facemask.xml" }, true);
+			
 			if(configContext!=null){
-				
+				//Get our basic configuration parameters for re-encoding. bandwidth and framerate
 				configuration = (ModuleConfig) configContext.getBean("config");
 				
+				//Get our brewery for our Potion. 
 				brewery = (Brewery)configContext.getBean("brew");
 			}
+			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,10 +105,71 @@ public class Facemask extends Red5Plugin implements MediaProcessorAware{
 		deploy();
 
 	}
+	
+	/**
+	 * 2) Deploy Native dependencies our C++ needs. 
+	 * 
+	 */
+	public void deploy(){
+		
+		//No configuration..
+		if(!javaLoaded.get()){
+			log.warn("waiting for java");
+			return;
+		}
+		
+		//lets deploy binaries
+		if(configuration!=null &&  nativeDeployed.compareAndSet(false, true)){	
 
-	public void doStop(){
-		MediaProcessor.removeProcessListener(this);
+			//First load support libs via system load lib call;
+			for(String platform:configuration.getSupportLibs()){
+				log.info("Loading {}", platform); 
+				
+				File f = new File(platform);
+
+				try {//attempt to extract it.
+					log.info("Loading {}  exists {}", f.getAbsolutePath(), f.exists()); 
+					
+					//Load OPEN CV
+					System.load(f.getAbsolutePath()); 
+				
+				
+				
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			//done loading open CV
+			allReady.set(true); 
+		}
+		
+		
+		//Try to Load the native module
+		loadModule();
+
 	}
+	/**
+	 * 3) Cauldron Library is Ready, We will load our video module with it.
+	 */
+	@Override
+	public void cauldronLibStarted(IProcess loader) {		
+		
+		log.warn("cauldron Lib Started");
+		
+		//This is our video module Loader.
+		this.loader=loader;
+
+		
+		deploy();
+
+
+	}
+	
+	
+	/**
+	 * 4) If everything is ready, we will finally Load the native shared lib / module. 
+	 */
 
 	private void loadModule(){	
 		
@@ -119,75 +197,73 @@ public class Facemask extends Red5Plugin implements MediaProcessorAware{
 		}
 	}
 
-	@Override
-	public void cauldronLibStarted(IProcess loader) {		
-		log.warn("cauldron Lib Started");
-
-		this.loader=loader;
-
-		deploy();
 
 
-	}
-
-	@Override
-	public void streamProcessorError(IProStream stream, Exception error) {
-		log.warn("streamProcessorError  {}  {}", stream.getBroadcastStreamPublishName(),error);
-
-	}
+	/**
+	 * 5) Stream Time! We configure a potion and set it to the stream.
+	 * 
+	 */
+	
 
 	@Override
 	public void streamProcessorStart(IProStream stream) {	
+		
+		// we care about only streams named asd in any room or scope. 
 		if(!stream.getPublishedName().equals("asd")){
 			return;
 		}
+				
 		log.warn("streamProcessorStart  {}", stream.getName());
+		
 		stream.setProcessorClass("com.red5pro.media.transform.codec.AVCProcessor"); 
+		
 		ProcessConfiguration config = new ProcessConfiguration();
+
+		//Because our native lib returns an edited image...
+		config.processReturn=ProcessReturnType.IMAGE.ordinal();
+		
+		//...we want to decode and re-encode,
+		config.processType= ProcessType.ENCODE.ordinal();
+
+		// and we want the stream to wait for remuxing.
 		config.processTiming=ProcessTiming.WAIT.ordinal();
+		//set it
 		stream.setProcessConfiguration(config ); 
+		
+		//We want to use our MASK four-cc processor
 		Potion potion = new Potion("MASK");
+		//we have an image resource.
 		potion.add(new Ingredient("mask_image", brewery.getIngredients().get("mask_image")));
+		//we have a cascade sheet from openCV to load.
 		potion.add(new Ingredient("cascade_sheet", brewery.getIngredients().get("cascade_sheet")));
+		//we set the potion!
 		stream.setPotion(potion);
 
 	}
-
+	/**
+	 * 6) end of session.
+	 */
 	@Override
 	public void streamProcessorStop(IProStream stream) {
 		log.warn("streamProcessorStop {} ",stream.getName());
 
 	}
 
-	public void deploy(){
+	
+	/**
+	 * Oh NO! error!
+	 */
+	@Override
+	public void streamProcessorError(IProStream stream, Exception error) {
+		log.warn("streamProcessorError  {}  {}", stream.getBroadcastStreamPublishName(),error);
 
-		if(!javaLoaded.get()){
-			log.warn("waiting for java");
-			return;
-		}
-		
-		if(configuration!=null &&  nativeDeployed.compareAndSet(false, true)){	
-
-			//First load support libs via system load lib call;
-			for(String platform:configuration.getSupportLibs()){
-				log.info("Loading {}", platform); 
-				
-				File f = new File(platform);
-
-				try {//attempt to extract it.
-					log.info("Loading {}  exists {}", f.getAbsolutePath(), f.exists()); 
-					System.load(f.getAbsolutePath()); 
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			allReady.set(true); 
-		}
-		
-		loadModule();
-
+	}
+	
+	/**
+	 * Red5 Plugin stopped.
+	 */
+	public void doStop(){
+		MediaProcessor.removeProcessListener(this);
 	}
 
 }
