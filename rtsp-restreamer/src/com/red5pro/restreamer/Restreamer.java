@@ -7,11 +7,10 @@ import org.red5.server.net.rtmp.event.AudioData;
 import org.red5.server.net.rtmp.event.VideoData;
 import org.red5.server.stream.ClientBroadcastStream;
 
-import com.red5pro.server.stream.util.restreamer.ClientHandler;
-import com.red5pro.server.stream.util.restreamer.ConnectorShell;
-import com.red5pro.server.stream.util.restreamer.MediaPacket;
-import com.red5pro.server.stream.util.restreamer.RTSPCameraClient;
-
+import com.red5pro.media.MediaPacket;
+import com.red5pro.restreamer.ClientHandler;
+import com.red5pro.restreamer.ConnectorShell;
+import com.red5pro.restreamer.RTSPCameraClient;
 
 /**
  * This example application adapter illustrates using the rtsp client.
@@ -20,31 +19,28 @@ import com.red5pro.server.stream.util.restreamer.RTSPCameraClient;
  */
 public class Restreamer extends MultiThreadedApplicationAdapter {
 
-	RTSPCameraClient test ;
+	RTSPCameraClient test;
+
 	/**
 	 * Application life-cycle begins here
 	 */
-	public boolean appStart(IScope scope){
-
+	public boolean appStart(IScope scope) {
 		super.appStart(scope);
-
 		// RTSP re-streamer usage
 		// We have two threads, one which is pulling from the ip camera, 
 		// and another which is pushing through the broadcast stream.
 		// The RTSPCameraClient requires a ClientHandler to be useful.
 		// We create a generic instance of the ClientHandler in-line.
 		// Here is the first thread. 
-		new Thread(new Runnable(){
-
+		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				//This demo waits ten seconds after startup, and begins pulling from an ip camera.
 				try {
-					Thread.sleep(10000);
+				    Thread.sleep(10000);
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				    e1.printStackTrace();
 				}
 				// imported from red5pro jar.				
 				test = new RTSPCameraClient();
@@ -56,34 +52,38 @@ public class Restreamer extends MultiThreadedApplicationAdapter {
 				test.setContextPath("");
 				test.setStreamName("stream1");
 				// camera uses default rtsp port
-				test.setPort(554); 
-				
+				test.setPort(554);
 				// create the generic handler.
-				test.setClient(new ClientHandler(){
+				test.setClient(new ClientHandler() {
 					
 					// server responded with 200 OK for play request after setup completed.
 					public void playbackBegin(RTSPCameraClient arg0) {
 						log.info("rtsp client playback begin");
 						
 					}
+
 					// RTSPCameraClient exited normally after close.
 					public void playbackEnd(RTSPCameraClient arg0) {
 						log.info("rtsp client playback end");
-						
 					}
+
 					// unexpected server closure or stream parse error.
 					public void streamError(RTSPCameraClient arg0) {
-						log.info("rtsp client stream Error");
-						
+						log.info("rtsp client stream Error");	
 					}
+
 					// No such host or un-reachable host.
 					public void unknownHostError(RTSPCameraClient arg0) {
 						log.info("rtsp client unknown Host Error");
 						
-					}});
-				
+					}
+				});
 				// Here is the second thread which actually drives the RTSPCameraClient
-				Thread thread = new Thread(test);
+				Thread thread = new Thread(
+				    public void run() {
+				        test.run();
+				    }
+				);
 				// Before negotiation with the camera for media, 
 				// we prepare the broadcast stream to make the media available to subscribers.
 				// Using a generic factory method, 
@@ -98,14 +98,12 @@ public class Restreamer extends MultiThreadedApplicationAdapter {
 					e1.printStackTrace();
 				} 
 				//and commit to the broadcast! 
-				broadcastStream.startPublishing();
-			
+				broadcastStream.startPublishing();			
 				//start the rtsp client
-				thread.start();
-				
+				thread.setDaemon(true);
+				thread.start();				
 				//This demo will cut off the broadcast after 60000 milliseconds. 
 				long startTime=System.currentTimeMillis();
-				
 				while (System.currentTimeMillis()-startTime < 60000) {					
 					// LOOP
 					// Here is the heart of the re-streaming.
@@ -145,11 +143,10 @@ public class Restreamer extends MultiThreadedApplicationAdapter {
 					e.printStackTrace();
 				}
 				// Dispose of the facade and stream.
-				ConnectorShell.Close(broadcastStream); 
-				
+				ConnectorShell.Close(broadcastStream);
 			//Start the Main thread of the RTSPCameraClient. 	
-			}}).start();
-
+			}
+		}).start();
 		// In about 10 seconds, we should see a broadcast stream become live and persist for about a minute. 
 		// there should be a recording left in the streams directory named 'stream1.flv'
 		return true;
