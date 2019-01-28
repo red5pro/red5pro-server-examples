@@ -1,5 +1,6 @@
 package com.red5pro.tsingest;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
@@ -61,8 +62,9 @@ public class Red5ProTSIngest extends MultiThreadedApplicationAdapter {
      * @param ipAddress unicast IP address or multicast group name
      * @param port the port to bind
      * @return streams path
+     * @throws IOException
      */
-    public String createListenerEndpoint(boolean unicast, String ipAddress, int port) {
+    public String createListenerEndpoint(boolean unicast, String ipAddress, int port) throws IOException {
         // get the transport
         MPEGTSTransport transport = TSIngestPlugin.getTransport();
         // get current first before attempting to create one
@@ -92,8 +94,9 @@ public class Red5ProTSIngest extends MultiThreadedApplicationAdapter {
      * @param port the port to bind
      * @param streamName
      * @return streams path
+     * @throws IOException
      */
-    public String createListenerEndpoint(boolean unicast, String ipAddress, int port, String streamName) {
+    public String createListenerEndpoint(boolean unicast, String ipAddress, int port, String streamName) throws IOException {
         // get the transport
         MPEGTSTransport transport = TSIngestPlugin.getTransport();
         // get current first before attempting to create one

@@ -4,11 +4,11 @@ org.springframework.context.ApplicationContext,
 org.springframework.web.context.WebApplicationContext,
 com.red5pro.mpegts.plugin.TSIngestPlugin,
 com.red5pro.mpegts.plugin.TSIngestEndpoint,
-com.infrared5.red5pro.tsingest.Red5ProTSIngest"
+com.red5pro.tsingest.Red5ProTSIngest"
 %>
 <%
     ApplicationContext appCtx = (ApplicationContext) getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-    Red5ProTSIngest tsApp = (Red5ProTSIngest) appCtx.getBean("web.handler");    
+    Red5ProTSIngest tsApp = (Red5ProTSIngest) appCtx.getBean("web.handler");
     // handle any submissions
     String message = "";
     // form action (create or dispose)
