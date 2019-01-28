@@ -24,3 +24,5 @@ To build the demo from source, you'll need to have Java 8 and Maven 3 installed;
 </dependency>
 ```
 Update the `systemPath` to match your install path.
+
+Once that's completed, build and package up as a Web Application Archive with the command `mvn`; you'll locate the `tsingest.war` in the `target` directory.

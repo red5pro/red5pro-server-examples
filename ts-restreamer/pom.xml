@@ -82,9 +82,7 @@
             <!-- pay no attention to this version when system scope is used -->
             <version>5.4.0</version>
             <scope>system</scope>
-            <!--
-            <systemPath>/usr/local/red5pro/lib/red5pro-5.4.0.31.jar</systemPath> -->
-            <systemPath>/home/mondain/Dropbox/Temp/red5pro/red5pro-5.4.0.112.jar</systemPath>
+            <systemPath>/usr/local/red5pro/lib/red5pro-5.4.0.31.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.red5pro</groupId>
@@ -92,9 +90,7 @@
             <!-- pay no attention to this version when system scope is used -->
             <version>5.4.0</version>
             <scope>system</scope>
-            <!--
-            <systemPath>/usr/local/red5pro/plugins/red5pro-restreamer-plugin-5.4.0.31.jar</systemPath> -->
-            <systemPath>/home/mondain/Dropbox/Temp/red5pro/red5pro-restreamer-plugin-5.4.0.112.jar</systemPath>
+            <systemPath>/usr/local/red5pro/plugins/red5pro-restreamer-plugin-5.4.0.31.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.red5</groupId>
