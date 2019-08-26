@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 
 
 /**
- * This example application adapter illustrates how to hook the stream end event in order to convert the flv to mp4..
+ * This example application adapter illustrates how to hook the stream end event in order to convert the flv to mp4.
  * @author Andy Shaules
  *
  */
@@ -21,8 +21,8 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 	 * Application life-cycle begins here
 	 */
 	public boolean appStart(IScope scope){
-		log.info("Red5 Pro File conversion Demo"); 
-		super.appStart(scope);		
+		log.info("Red5 Pro File conversion Demo");
+		super.appStart(scope);
 		//Return false to prevent app from starting for any reason
 		return true;
 	}
@@ -31,31 +31,31 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 	 */
 	public void streamBroadcastClose(IBroadcastStream stream){
 		log.info("Stream closed {}", stream.getSaveFilename());
-		
+
 		if(stream.getSaveFilename()!=null){
 			final String name = stream.getPublishedName();
 			final String theFlv = stream.getSaveFilename();
 			final IScope fileScope = stream.getScope();
 			final String path = fileScope.getContextPath();
-			log.info("path {}",path); 
-			
+			log.info("path {}",path);
+
 			new Thread(new Runnable(){
 
 				@Override
 				public void run() {
-					//let the server finish writing the file.					
+					//let the server finish writing the file.
 					try {
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
-						
+
 						e.printStackTrace();
-					} 
-					
+					}
+
 					//get the recorded file
-					Resource res = fileScope.getResource(theFlv); 
-					
+					Resource res = fileScope.getResource(theFlv);
+
 					if(res!=null){
-						
+
 						try {//Get the path for command line.
 							//the recorded file location
 							//Where is this happening?
@@ -78,7 +78,7 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 							}
 							//Add the file name to complete the path.
 							String filePath= inputLocation+name+".flv";//or use 'theFlv'
-							//Form the output path.							
+							//Form the output path.
 							String outputLocation = "PATH_TO_RED5_ROOT/webapps/"+appName+"/";
 							//Here you could potentially recreate the context structure of the rooms that we parsed above.
 							//add the room names back onto the path and call makdirs.
@@ -92,7 +92,7 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 								checker.delete();
 							}
 							String ToolPath="ffmpeg";
-							
+
 							String[] commandFixed = {
 									ToolPath,
 									"-i",filePath,
@@ -109,24 +109,24 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 							//let this thread wait for the process to exit.
 							int returnCode = p.waitFor();
 							//check that there is a file created afterwards.
-							checker = new File(outputFile); 
-							
-							if(!checker.exists() || checker.length() == 0){								
+							checker = new File(outputFile);
+
+							if(!checker.exists() || checker.length() == 0){
 								log.error("Error processing" + returnCode);
 							}
-							
-							
+
+
 						} catch (IOException e) {
-						
+
 							e.printStackTrace();
 						} catch (InterruptedException e) {
-							
+
 							e.printStackTrace();
 						}
-					}					
-					
-				}}).start();			
-		}	
+					}
+
+				}}).start();
+		}
 	}
 
 	static class SyncPipe implements Runnable
@@ -135,23 +135,23 @@ public class Red5ProLive extends MultiThreadedApplicationAdapter {
 
 
 		public SyncPipe(InputStream isg) throws IOException {
-			istrm = isg;	
+			istrm = isg;
 		}
-		
+
 		public void run() {
 			try
 			{
 
 				int in = -1;
 				while ((in = istrm.read()) != -1) {
-					
-				       System.out.print((char)in);  
+
+				       System.out.print((char)in);
 				}
 
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();			
+				e.printStackTrace();
 			}
 		}
 	}
