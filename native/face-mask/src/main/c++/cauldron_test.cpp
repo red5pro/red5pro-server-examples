@@ -19,7 +19,7 @@ extern "C"
 
 
 
-	DLLEXPORT CVideoProcessModule* CreateVideoProcessor()
+	DLLEXPORT CVideoProcessModule2* CreateVideoProcessor()
 	{
 		std::cout << "Create facemask processor \n";
 		return new TestProcessor();
@@ -27,7 +27,7 @@ extern "C"
 
 
 
-	DLLEXPORT void DestroyVideoProcessor(CVideoProcessModule* processor)
+	DLLEXPORT void DestroyVideoProcessor(CVideoProcessModule2* processor)
 	{
 		std::cout << "Destroy facemask processor \n";
 		delete processor;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	
+	<!-- Binaries to load -->	
+    <bean name="config" class="com.red5pro.server.cauldron.facemask.ModuleConfig" >	
+		<property name="moduleFile" value="plugins/native/facemask/facemasking-3.0.4268.dll"/>
+		<property name="supportLibs" >
+		    <list >
+ 				<value>plugins/native/facemask/opencv_world320.dll</value>
+		    </list>
+		</property>
+	</bean>
+		
+     <!-- Potion for live stream -->     
+     <bean id="brew" class="com.red5pro.server.cauldron.facemask.Brewery">  		
+		<property name="potion" value="MASK" />
+		<property name="ingredients">
+			<map>
+			    <!-- C++ properties lower_snake_case -->
+		        <entry key = "cascade_sheet" value ="plugins/native/facemask/haarcascade_frontalface_alt.xml"/>
+		        <entry key = "mask_image"    value ="plugins/native/facemask/mask.png"/>
+			</map>
+		</property>
+	</bean>  
+</beans>

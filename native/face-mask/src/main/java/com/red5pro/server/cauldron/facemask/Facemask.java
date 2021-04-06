@@ -13,7 +13,9 @@ import com.red5pro.override.cauldron.IProcess;
 import com.red5pro.override.cauldron.MediaProcessor;
 import com.red5pro.override.cauldron.MediaProcessorAware;
 import com.red5pro.override.cauldron.ProcessConfiguration;
+import com.red5pro.override.cauldron.ProcessConfiguration.ProcessReturn;
 import com.red5pro.override.cauldron.ProcessConfiguration.ProcessTiming;
+import com.red5pro.override.cauldron.ProcessConfiguration.ProcessType;
 import com.red5pro.override.cauldron.brews.Ingredient;
 import com.red5pro.override.cauldron.brews.Potion;
 //com.red5pro.server.cauldron.facemask.Facemask
@@ -215,12 +217,12 @@ public class Facemask extends Red5Plugin implements MediaProcessorAware{
 				
 		log.warn("streamProcessorStart  {}", stream.getName());
 		
-		stream.setProcessorClass("com.red5pro.media.transform.codec.AVCProcessor"); 
+		stream.setProcessorClass("com.red5pro.media.transform.codec.AudioCapableProcessor"); 
 		
 		ProcessConfiguration config = new ProcessConfiguration();
 
 		//Because our native lib returns an edited image...
-		config.processReturn=ProcessReturnType.IMAGE.ordinal();
+		config.processReturnType=ProcessReturn.IMAGE.ordinal();
 		
 		//...we want to decode and re-encode,
 		config.processType= ProcessType.ENCODE.ordinal();
