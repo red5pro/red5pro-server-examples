@@ -1,6 +1,7 @@
 # Demo Mask
 Live demo used to introduce the new feature. Plugin uses opencv objdetect to overlay png face mask
 
+[[pic.PNG]]
 
 Download or build opencv developer components.  .libs and .dll/.so
 
