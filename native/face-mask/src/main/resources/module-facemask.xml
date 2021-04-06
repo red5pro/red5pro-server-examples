@@ -10,7 +10,7 @@
 	
 	<!-- Binaries to load -->	
     <bean name="config" class="com.red5pro.server.cauldron.facemask.ModuleConfig" >	
-		<property name="moduleFile" value="plugins/facemask/facemasking.dll"/>
+		<property name="moduleFile" value="plugins/facemask/facemask.dll"/>
 		<property name="supportLibs" >
 		    <list >
  				<value>plugins/facemask/opencv_world320.dll</value>

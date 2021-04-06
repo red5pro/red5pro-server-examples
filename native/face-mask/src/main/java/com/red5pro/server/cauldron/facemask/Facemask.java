@@ -85,7 +85,7 @@ public class Facemask extends Red5Plugin implements MediaProcessorAware{
 
 		try {
 			//look up our XML configuratiion
-			configContext = new FileSystemXmlApplicationContext(new String[] { "/${red5.root}/plugins/native/facemask/module-facemask.xml" }, true);
+			configContext = new FileSystemXmlApplicationContext(new String[] { "/${red5.root}/plugins/facemask/module-facemask.xml" }, true);
 			
 			if(configContext!=null){
 				//Get our basic configuration parameters for re-encoding. bandwidth and framerate
@@ -209,11 +209,7 @@ public class Facemask extends Red5Plugin implements MediaProcessorAware{
 
 	@Override
 	public void streamProcessorStart(IProStream stream) {	
-		
-		// we care about only streams named asd in any room or scope. 
-		if(!stream.getPublishedName().equals("asd")){
-			return;
-		}
+
 				
 		log.warn("streamProcessorStart  {}", stream.getName());
 		
