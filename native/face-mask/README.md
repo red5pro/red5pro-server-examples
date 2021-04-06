@@ -1,8 +1,6 @@
 # Demo Mask
 Live demo used to introduce the new feature. Plugin uses opencv objdetect to overlay png face mask
 
-[[pic.PNG]]
-
 Download or build opencv developer components.  .libs and .dll/.so
 
 # Building with JAR
@@ -17,6 +15,7 @@ Using this method allows you to compile the native code with the tools of your c
 
 
 # Building with NAR
+Edit the pom packaging entry at the top. Comment-out the 'jar' and uncomment the 'nar'.
 The example dynamic modules requires opencv.
 Install includes and lib/dlls into proper AOL directory.
 
