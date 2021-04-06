@@ -10,10 +10,10 @@
 	
 	<!-- Binaries to load -->	
     <bean name="config" class="com.red5pro.server.cauldron.facemask.ModuleConfig" >	
-		<property name="moduleFile" value="plugins/native/facemask/facemasking-3.0.4268.dll"/>
+		<property name="moduleFile" value="plugins/facemask/facemasking.dll"/>
 		<property name="supportLibs" >
 		    <list >
- 				<value>plugins/native/facemask/opencv_world320.dll</value>
+ 				<value>plugins/facemask/opencv_world320.dll</value>
 		    </list>
 		</property>
 	</bean>
@@ -24,8 +24,8 @@
 		<property name="ingredients">
 			<map>
 			    <!-- C++ properties lower_snake_case -->
-		        <entry key = "cascade_sheet" value ="plugins/native/facemask/haarcascade_frontalface_alt.xml"/>
-		        <entry key = "mask_image"    value ="plugins/native/facemask/mask.png"/>
+		        <entry key = "cascade_sheet" value ="plugins/facemask/haarcascade_frontalface_alt.xml"/>
+		        <entry key = "mask_image"    value ="plugins/facemask/mask.png"/>
 			</map>
 		</property>
 	</bean>  

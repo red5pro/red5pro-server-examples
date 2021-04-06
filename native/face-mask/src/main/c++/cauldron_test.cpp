@@ -5,8 +5,8 @@
 #include "cauldron_test.h"
 
 
-
-
+#define NO_ERROR 0 
+#define FRAME_READY 1
 
 //Factory Methods the shared library exports.
 
@@ -72,12 +72,19 @@ uint32_t TestProcessor::open(uint16_t width, uint16_t height, uint8_t *type, uin
 
 	this->errors = 0;	
 
-	return 0;
+	return NO_ERROR;
 }
 
 
+void TestProcessor::set_env(void* jniEnv) 
+{
+	//not using JNI to call back to java static handlers.
+}
 
-
+uint32_t TestProcessor::set_audio(uint32_t rate, uint32_t channel_count)
+{
+	return NO_ERROR;
+}
 
 //apply a key/value property to the processor. 
 uint32_t TestProcessor::apply(const char* key, const char* value)
@@ -113,7 +120,7 @@ uint32_t TestProcessor::apply(const char* key, const char* value)
 		}
 	}
 
-	return 0;
+	return NO_ERROR;
 }
 
 
@@ -122,26 +129,33 @@ uint32_t TestProcessor::apply(const char* key, const char* value)
 //called with decoded image. Do a transform in-place to the data pointer.
 //Return 0 if there is no frame available yet.
 //Change the time value if the output time differs from the input time. 
-uint32_t TestProcessor::process(uint8_t *data, uint32_t size, uint32_t* time)
+uint32_t TestProcessor::process(uint32_t type, uint8_t *data, uint32_t size, uint32_t* time)
 {
-	//packet yv420 planer, cols w,w/4,w/4 rows h, h/4, h/4
-	cv::Mat myuv(height + height / 2, width, CV_8UC1, data);
-	uint8_t *dest = (uint8_t*)malloc(height * width * 4);
-	cv::Mat mbgr(height, width, CV_8UC4, dest);
-	cv::cvtColor(myuv, mbgr, CV_YUV2BGRA_I420);
-
-	// TODO rotate for facedetection
-	//if ( this->rotationDegree != 0.0f) {
-	//	rotate(mbgr);
-	//}
-
-	detectAndDraw(mbgr);
-
-	cv::cvtColor(mbgr, myuv, CV_BGRA2YUV_I420);
 	
-	free(dest);
+	if (type == I420_TYPE)
+	{
+		//packet yv420 planer, cols w,w/4,w/4 rows h, h/4, h/4
+		cv::Mat myuv(height + height / 2, width, CV_8UC1, data);
+		uint8_t *dest = (uint8_t*)malloc(height * width * 4);
+		cv::Mat mbgr(height, width, CV_8UC4, dest);
+		cv::cvtColor(myuv, mbgr, CV_YUV2BGRA_I420);
 
-	return 1;//image returned
+		// TODO rotate for facedetection
+		//if ( this->rotationDegree != 0.0f) {
+		//	rotate(mbgr);
+		//}
+
+		detectAndDraw(mbgr);
+
+		cv::cvtColor(mbgr, myuv, CV_BGRA2YUV_I420);
+
+		free(dest);
+	}
+	else if (type == PCM_TYPE) 
+	{
+
+	}
+	return FRAME_READY;//image returned always
 }
 
 
@@ -291,7 +305,7 @@ uint32_t TestProcessor::reinit(uint16_t width, uint16_t height)
 	this->width = width;
 	this->height = height;
 	has_face = 0;
-	return 0;
+	return NO_ERROR;
 }
 
 
@@ -301,6 +315,6 @@ uint32_t TestProcessor::reinit(uint16_t width, uint16_t height)
 uint32_t TestProcessor::close()
 {
 	std::cout << "close \n";
-	return 0;
+	return NO_ERROR;
 }
 
