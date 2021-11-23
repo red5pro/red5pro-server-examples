@@ -1,10 +1,10 @@
 #pragma once
 
 #include "video_processor2.h"
+//#include "video_processor.h"
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
 #include "opencv2/objdetect.hpp"
 
 
@@ -30,8 +30,8 @@
 #define CASCADE_FILE  "cascade_sheet"
 #define MASK_IMAGE  "mask_image"
 
-static int I420_TYPE = ('I') | ('4' << 8) | ('2' << 16) | ('0' << 24);
-static int PCM_TYPE = ('P') | ('C' << 8) | ('M' << 16) | (' ' << 24);
+static int i420_TYPE = ('I') | ('4' << 8) | ('2' << 16) | ('0' << 24);
+
 using namespace cv;
 //VISIBLE_CLASSIFIER
 
@@ -46,15 +46,13 @@ extern "C" {
 	*/
 	class TestProcessor :public CVideoProcessModule2
 	{
-		//Interface implementation.
 		//return fourCC
 		uint32_t get_guid();
 		//called when video stream size is first discovered.
 		//Type of processing behavior is signaled. 
 		uint32_t open(uint16_t width, uint16_t height, uint8_t *type, uint8_t *timing, uint8_t *format, uint8_t *return_type);
-		// env can be cast to JNIEnv* for java callback funtionality
+		
 		void set_env(void* env);
-		// Audio properties set once discovered.
 		uint32_t set_audio(uint32_t rate, uint32_t channel_count);
 		//resolution change midstream. re-allocate assets. 
 		uint32_t reinit(uint16_t width, uint16_t height);
@@ -66,9 +64,6 @@ extern "C" {
 		uint32_t process(uint32_t type, uint8_t *data, uint32_t size, uint32_t* time);
 		//free resources.
 		uint32_t close();
-
-		//Custom methods.
-		//rotate picture.
 		void rotate(Mat& img);
 		//internal methods.
 		void detectAndDraw(Mat& img);
@@ -77,13 +72,12 @@ extern "C" {
 		cv::String face_cascade_name;
 
 		Mat mask;
-
 		uint32_t  counter = 0;
 
 		// Mask offset properties
 		float yOffset = 0; // in pixels and appears to cover the additional space needed by the forehead
 		float xOffset = 0; // not needed during face detection, but will offset the xPos
-		//Mask scaling properties
+						   // Mask scaling properties
 		float maskScaleX = 1.2;
 		float maskScaleY = 1.6;
 		float rotationDegree = 0.0;
@@ -97,12 +91,36 @@ extern "C" {
 		uint8_t return_type;
 		uint32_t errors;
 		uint32_t do_detect;
-		uint32_t do_rotation;
-		cv::Mat mask_mat;
+		uint32_t do_rotation;		
 		uint32_t top;
 		uint32_t bottom;
 		uint32_t left;
 		uint32_t right;
 		uint32_t has_face;;
+	};
+
+	enum PROCESS_TYPE {
+		PROCESS_TYPE_NONE,
+		PROCESS_TYPE_PASS_THROUGH,
+		PROCESS_TYPE_DECODE,
+		PROCESS_TYPE_ENCODE,
+		PROCESS_TYPE_DEMO
+	};
+	//PROCESS_TIMING_WAIT, see javadocs
+	enum PROCESS_TIMING {
+		PROCESS_TIMING_NO_WAIT,
+		PROCESS_TIMING_WAIT,
+	};
+	//PROCESS_IMAGE_FORMAT_YV420P, see javadocs
+	enum PROCESS_IMAGE_FORMAT {
+		PROCESS_IMAGE_FORMAT_YV420P,
+		PROCESS_IMAGE_FORMAT_BGR24,
+		PROCESS_IMAGE_FORMAT_BGR32
+	};
+	//PROCESS_RETURN_IMAGE, see javadocs
+	enum PROCESS_RETURN {
+		PROCESS_RETURN_NONE,
+		PROCESS_RETURN_IMAGE,
+		PROCESS_RETURN_DATA
 	};
 }

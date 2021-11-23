@@ -3,21 +3,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.red5pro.server.cauldron.facemask</groupId>
     <artifactId>facemasking</artifactId>
-    <version>8.0.0</version>
+    <version>9.1.0</version>
     <packaging>jar</packaging>
-    
-    <!-- switch to nar to use maven to compile native code.
-    <packaging>nar</packaging>
-     -->
     <name>Cauldron OpenCV Facemasking</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.verbose>true</maven.compiler.verbose>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <maven.compiler.source>1.11</maven.compiler.source>
+        <maven.compiler.target>1.11</maven.compiler.target>
+        <java.release.level>11</java.release.level>
         <spring.version>4.3.2.RELEASE</spring.version>
-        <red5.version>1.0.10-M4</red5.version>
-        <red5pro-common.version>7.3.2</red5pro-common.version>
+        <red5.version>1.2.8</red5.version>
+        <red5pro-common.version>9.1.2</red5pro-common.version>
          <finalName>opencv-facemask</finalName>
         <!-- windows msvc tool path -->
         <!-- <msvc.toolpath>C:/Program Files (x86)\Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.10.25017/bin/HostX64/x64</msvc.toolpath> -->      
@@ -28,33 +26,57 @@
         <defaultGoal>clean package</defaultGoal>
         <pluginManagement>
             <plugins>
-                <plugin>
+                                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
+                    <version>3.8.1</version>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
                     <configuration>
-                        <encoding>${project.build.sourceEncoding}</encoding>
+                                <!-- compile everything to ensure module-info contains right entries -->
+                                <release>${java.release.level}</release>
+                    </configuration>
+                        </execution>
+                        <execution>
+                            <id>base-compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <!-- recompile everything for target VM except the module-info.java -->
+                            <configuration>
+                                <excludes>
+                                    <exclude>module-info.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <!-- defaults for compile and testCompile -->
+                    <configuration>
+                        <!-- Only required when JAVA_HOME isn't at least Java 9 and when haven't configured the maven-toolchains-plugin -->
+                        <jdkToolchain>
+                            <version>11</version>
+                        </jdkToolchain>
+                        <verbose>true</verbose>
+                        <release>${java.release.level}</release>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
+                    <version>3.1.1</version>
                 </plugin>                    
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
-                <plugin>
-                    <groupId>com.github.maven-nar</groupId>
-                    <artifactId>nar-maven-plugin</artifactId>
-                    <version>3.5.2</version>                   
-                </plugin>
+
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                 </plugin>
+                
             	<plugin>
 	                <artifactId>maven-jar-plugin</artifactId>
-	                	<version>2.6</version>
+	                	<version>3.2.0</version>
 	                	<configuration>
 	                    	<finalName>${finalName}</finalName>
 	                    	<archive>
