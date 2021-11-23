@@ -151,18 +151,7 @@
     </dependencies>
     
     
-    <distributionManagement>
-        <repository>
-            <id>red5pro-private</id>
-            <name>red5pro-releases</name>
-            <url>https://red5pro.jfrog.io/red5pro/libs-private</url>
-        </repository>
-        <snapshotRepository>
-            <id>red5pro-private</id>
-            <name>red5pro-snapshots</name>
-            <url>https://red5pro.jfrog.io/red5pro/libs-private</url>
-        </snapshotRepository>
-    </distributionManagement>
+
     <profiles>
         <profile>
             <id>osx</id>
