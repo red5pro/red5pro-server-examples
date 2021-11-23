@@ -1,33 +1,27 @@
 # Demo Mask
-Live demo used to introduce the new feature. Plugin uses opencv objdetect to overlay png face mask
+Live demo used to introduce the brew feature. Plugin uses opencv objdetect to locate a face
 
-Download or build opencv developer components.  .libs and .dll/.so
 
-# Building with JAR
+# Building the JAR
 
-For all platforms, to build the jar plugin without compiling the native code:
+For all platforms, to build the jar plugin:
 ```sh
 mvn clean install
 ```
-The jar in target folder installs to server plugins folder.
-
-Using this method allows you to compile the native code with the tools of your choice.
+The jar will be found in the target folder, and installs to server plugins directory.
 
 
-# Building with NAR
-Edit the pom packaging entry at the top. Comment-out the 'jar' and uncomment the 'nar'.
-The example dynamic modules requires opencv.
-Install includes and lib/dlls into proper AOL directory.
+# Building the native code
 
-Replace `linux` with the target operating system in the commands below:
- * Linux = `linux`
- * Windows = `win`
- * MacOS / OSX = `osx`
+Install build tools 
 
-To build for Linux, execute the following command using multiple profiles
 ```sh
-mvn -P linux
+apt-get update apt install build-essential cmake git pkg-config libgtk-3-dev  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev  libxvidcore-dev libx264-dev libjpeg-dev libpng-dev libtiff-dev  gfortran openexr libatlas-base-dev python3-dev python3-numpy  libtbb2 libtbb-dev libdc1394-22-dev libopenexr-dev  libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 ```
+
+Navigate into the c++ folder and call 'make' 
+
+Requires openJDK 11 or higher. 
 
 # Server configuration
 This demo uses native brew API version 2. This requires you to change the red5pro-activation.xml file property to use the AudioCapableProcessor:
@@ -40,32 +34,31 @@ Compile the jar and place it into the server plugins folder.
 
 Create a directory named 'facemask' in the server plugins folder.
 
-Put the three resource files into the facemask directory. mask.png and two xml files.
+Put the two resource xml files into the facemask directory.
 
-Edit module-facemask.xml file. 
+Edit module-facemask.xml file as required. 
 
-Set moduleFile path to your compiled native code dll/so/dynlib  
+Set moduleFile path to your compiled native code facemask-4.2.0.so binary  
 
-This demo uses open CV. Either install the opencv components to your server's path or set them into the supportLibs property.  
+Edit as required the the supportLibs list of openCV components.  
 
 ```sh
 
-		<property name="moduleFile" value="plugins/facemask/facemask.dll"/>
+    <bean name="config" class="com.red5pro.server.cauldron.facemask.ModuleConfig" >	
+		<property name="moduleFile" value="/usr/local/red5pro/plugins/facemask/facemask-4.2.0.so"/>
 		<property name="supportLibs" >
 		    <list >
- 				<value>plugins/facemask/opencv_world320.dll</value>
+				<value>/usr/local/red5pro/plugins/facemask/libopencv_core.so</value>
+				<value>/usr/local/red5pro/plugins/facemask/libopencv_imgproc.so</value>
+				<value>/usr/local/red5pro/plugins/facemask/libopencv_objdetect.so</value>
 		    </list>
 		</property>
+	</bean>
 
 ```
-If you install libopenCV-dev with apt-get, you can remove the entry from the supportLibs property. If your openCV components are compiled as separate parts, the entries are loaded sequentially so any linker errors at runtime can be solved by correctly ordering the dependancies in the supportLibs list. 
+The Support entries are loaded sequentially so any linker errors at runtime can be solved by correctly ordering the dependancies in the supportLibs list as above. 
  
 
-# References
-
-[NAR FAQ](https://github.com/maven-nar/nar-maven-plugin/wiki/)
-
-[NAR Maven Plugin](http://maven-nar.github.io/index.html)
 
 
 
