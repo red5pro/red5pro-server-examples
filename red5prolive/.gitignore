@@ -1,0 +1,14 @@
+/target/
+*.class
+*.DS_Store
+*.metadata
+*.war
+*.ear
+*.log
+.project
+.classpath
+.settings/
+.externalToolBuilders/
+.recommenders
+.metadata
+.vscode/
