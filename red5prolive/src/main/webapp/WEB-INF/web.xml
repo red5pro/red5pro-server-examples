@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="3.0"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <display-name>live</display-name>
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>/live</param-value>
+    </context-param>
+    <!-- Context level parameters for use in the servlets -->
+    <!-- Stun server defaults to enabled with a google stun value
+    <context-param>
+        <param-name>stun-server</param-name>
+        <param-value>stun2.l.google.com:19302</param-value>
+    </context-param>
+    -->
+    <!-- Generally TURN isn't used unless tunneling is required
+    <context-param>
+        <param-name>turn-server</param-name>
+        <param-value>coturn.example.com:3478?transport=udp</param-value>
+    </context-param>    
+    -->
+    <!-- CORS filter with wideopen origin and all methods allowed by default -->
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.red5pro.servlet.filter.CorsFilter</filter-class>
+        <!-- any init params here will override the centralized cors config in activation.xml -->
+        <!--
+        <init-param>
+            <param-name>allowedOrigins</param-name>
+            <param-value>*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedMethods</param-name>
+            <param-value>OPTIONS, HEAD, GET, POST, PUT, PATCH, DELETE</param-value>
+        </init-param>
+        <init-param>
+            <param-name>maxAge</param-name>
+            <param-value>3600</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedHeaders</param-name>
+            <param-value>*</param-value>
+        </init-param>
+        -->
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>    
+    <!-- WHIP/WHEP filter -->
+    <filter>
+        <filter-name>WHRequestFilter</filter-name>
+        <filter-class>com.red5pro.whip.servlet.WHFilter</filter-class>
+        <async-supported>false</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>WHRequestFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <!-- WebSocket filter -->
+    <filter>
+        <filter-name>WebSocketFilter</filter-name>
+        <filter-class>org.red5.net.websocket.server.WsFilter</filter-class>
+        <async-supported>false</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebSocketFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <!-- uncomment for HLS auth -->
+    <!--
+    <filter>
+    	<filter-name>authServlet</filter-name>
+    	<filter-class>com.red5pro.server.plugin.simpleauth.servlet.AuthServlet</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>authServlet</filter-name>
+	    <url-pattern>*.m3u8</url-pattern>
+	</filter-mapping>
+	 -->
+    <servlet>
+        <servlet-name>interstitial</servlet-name>
+        <servlet-class>com.red5pro.interstitial.service.InterstitialREST</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>interstitial</servlet-name>
+        <url-pattern>/interstitial</url-pattern>
+    </servlet-mapping>
+    <!--
+    <servlet>
+        <servlet-name>cloudwatch</servlet-name>
+        <servlet-class>com.red5pro.cluster.plugin.api.validator.CloudWatchBase</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cloudwatch</servlet-name>
+        <url-pattern>/cloudwatch</url-pattern>
+    </servlet-mapping>
+     -->
+	<!--
+	<servlet>
+	    <servlet-name>RestreamerServlet</servlet-name>
+	    <servlet-class>com.red5pro.restreamer.servlet.RestreamerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>RestreamerServlet</servlet-name>
+	    <url-pattern>/restream</url-pattern>
+	</servlet-mapping>
+	 -->
+    <!-- uncomment below for Client Suppressor Plugin Servlet -->
+    <!--
+    <servlet>
+        <servlet-name>client-suppressor</servlet-name>
+        <servlet-class>com.red5pro.client.suppressor.servlet.ClientSuppressorServlet</servlet-class>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>client-suppressor</servlet-name>
+        <url-pattern>/suppressor/*</url-pattern>
+    </servlet-mapping>
+    -->
+    <!--note: social push plugin servlet is defined in root/WEB-INF/web.xml -->
+    <!-- HLS served from RAM -->
+    <servlet>
+        <servlet-name>hls</servlet-name>
+        <servlet-class>com.red5pro.stream.transform.mpegts.server.TSServlet</servlet-class>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hls</servlet-name>
+        <url-pattern>*.m3u8</url-pattern>
+        <url-pattern>*.ts</url-pattern>
+        <url-pattern>*.m4s</url-pattern>
+        <url-pattern>*.mp4</url-pattern>
+    </servlet-mapping>
+    <!-- HLS playlist listing -->
+    <servlet>
+        <servlet-name>playlists</servlet-name>
+        <servlet-class>com.red5pro.stream.transform.mpegts.server.M3U8ListingServlet</servlet-class>
+        <!-- Replace the class above to enable simple-auth -->
+        <!--
+        <servlet-class>com.red5pro.server.plugin.simpleauth.servlet.M3U8ListingServlet</servlet-class>
+        -->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>playlists</servlet-name>
+        <url-pattern>/playlists/*</url-pattern>
+    </servlet-mapping>
+    <!-- FLV/MP4 S3 Listing -->
+    <servlet>
+      <servlet-name>mediafiles</servlet-name>
+      <servlet-class>com.red5pro.media.storage.servlet.MediaFileListingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>mediafiles</servlet-name>
+      <url-pattern>/mediafiles/*</url-pattern>
+    </servlet-mapping>
+    <!-- Alias feature for publish and playback -->
+    <!-- uncomment as needed
+    <servlet>
+        <servlet-name>AliasServlet</servlet-name>
+        <servlet-class>com.infrared5.red5pro.servlet.Alias</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AliasServlet</servlet-name>
+        <url-pattern>/alias/*</url-pattern>
+    </servlet-mapping>
+    -->
+    <!-- WHIP (publisher) endpoint -->
+    <servlet>
+        <servlet-name>whip</servlet-name>
+        <servlet-class>com.red5pro.whip.servlet.WhipEndpoint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>whip</servlet-name>
+        <url-pattern>/whip/endpoint/*</url-pattern>
+        <url-pattern>/whip/resource/*</url-pattern>
+    </servlet-mapping>
+    <!-- WHEP (subscriber) endpoint -->
+    <servlet>
+        <servlet-name>whep</servlet-name>
+        <servlet-class>com.red5pro.whip.servlet.WhepEndpoint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>whep</servlet-name>
+        <url-pattern>/whep/endpoint/*</url-pattern>
+        <url-pattern>/whep/resource/*</url-pattern>
+    </servlet-mapping>
+</web-app>
