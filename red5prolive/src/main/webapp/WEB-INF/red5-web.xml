@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd">
+
+    <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="/WEB-INF/red5-web.properties" />
+    </bean>
+
+    <bean id="web.context" class="org.red5.server.Context" autowire="byType" />
+
+    <bean id="web.scope" class="org.red5.server.scope.WebScope" init-method="register">
+        <property name="server" ref="red5.server" />
+        <property name="parent" ref="global.scope" />
+        <property name="context" ref="web.context" />
+        <property name="handler" ref="web.handler" />
+        <property name="contextPath" value="${webapp.contextPath}" />
+        <property name="virtualHosts" value="${webapp.virtualHosts}" />
+    </bean>
+
+    <!-- Replace this class value with your handler -->
+    <bean id="web.handler" class="com.infrared5.red5pro.live.Red5ProLive" >
+        <property name="doCanvasTest" value="false" />
+        <property name="canvasTestName" value="canvasTest" />
+        <property name="canvasTestDelay" value="10000" />
+        <!-- Duration is in milliseconds -->
+        <property name="canvasTestDuration" value="240000" />
+        <property name="canvasTestWidth" value="640" />
+        <property name="canvasTestHeight" value="480" />
+        <property name="canvasTestFrameRate" value="15" />
+        <property name="canvasTestSampleRate" value="16000" />
+        <!-- Interstitial -->
+        <property name="isInterstitialHandlerEnabled" value="true" />
+        <property name="webhookEndpoint" value="${webhooks.endpoint}" />
+        <!-- SDP intercept / override (true=enabled, false=disabled) -->
+        <!-- Intercept the offer SDP destined for a subscriber -->
+        <property name="interceptOfferSDP" value="false" />
+        <!-- Intercept the answer SDP destined for a publishing source -->
+        <property name="interceptAnswerSDP" value="false" />
+    </bean>
+
+    <bean id="streams" class="com.infrared5.red5pro.live.LiveStreamListService" >
+        <constructor-arg ref="web.handler"/>
+    </bean>
+
+    <!-- Enable this if you're using S3 storage -->
+    <!--
+    <bean id="streamFilenameGenerator" class="com.red5pro.media.storage.s3.S3FilenameGenerator"/>
+    -->
+    <!-- Enable this if you're using GCP storage -->
+    <!--
+    <bean id="streamFilenameGenerator" class="com.red5pro.media.storage.gstorage.GStorageFilenameGenerator"/>
+    -->
+    <!-- Enable this if you're using DO storage -->
+    <!--
+    <bean id="streamFilenameGenerator" class="com.red5pro.media.storage.digitalocean.DOFilenameGenerator"/>
+  -->
+  <!-- Enable this if you're using Azure storage -->
+  <!--
+  <bean id="streamFilenameGenerator" class="com.red5pro.media.storage.azure.AzureFilenameGenerator"/>
+  -->
+
+    <!-- Video preprocessor decodes incoming video.
+   		Resize video if desired. width and height of zero keeps video at original size.
+    	QP range is 0-63. For CBR, videoQPMin must not be zero.
+    	Bitrate is in bits per second. For CBR set both values the same
+     -->
+	 
+    <!--   Enabling dynamic setting uses bitrates listed in server/conf/red5-common.xml . Dynamic processor ensures all h264 video is baseline.  -->
+	<!--
+    <bean id="ipreprocessorFactory" class="com.red5pro.override.cauldron.PreprocessorFactory">		
+		<property name="videoWidth" value="0" />
+		<property name="videoHeight" value="0" />		
+		<property name="videoQPMin" value="1" />
+		<property name="videoQPMax" value="63" />		
+		<property name="videoBR" value="2000000" />
+    	<property name="videoBRMax" value="2000000" />         		
+		<property name="dynamic" value="false" />
+	</bean>
+    -->
+    
+    <!-- uncomment below for Round Trip Authentication-->
+    <!--
+    <bean id="roundTripValidator" class="com.red5pro.server.plugin.simpleauth.datasource.impl.roundtrip.RoundTripAuthValidator" init-method="initialize">
+    <property name="adapter" ref="web.handler" />
+    <property name="context" ref="web.context" />
+    <property name="protocol" value="${server.protocol}" />
+    <property name="host" value="${server.host}" />
+    <property name="port" value="${server.port}" />
+    <property name="validateCredentialsEndPoint" value="${server.validateCredentialsEndPoint}"/>
+    <property name="invalidateCredentialsEndPoint" value="${server.invalidateCredentialsEndPoint}"/>
+    <property name="clientTokenRequired" value="false"/>
+</bean>
+
+<bean id="simpleAuthSecurity" class="com.red5pro.server.plugin.simpleauth.Configuration" >
+    <property name="active" value="true" />
+    <property name="rtmp" value="true" />
+    <property name="rtsp" value="true" />
+    <property name="rtc" value="true" />
+	<property name="srt" value="true" />
+	<property name="mpegts" value="true" />
+    <property name="rtmpAllowQueryParamsEnabled" value="true" />
+    <property name="allowedRtmpAgents" value="*" />
+    <property name="validator" ref="roundTripValidator" />
+</bean>
+-->
+  <!-- uncomment above for Round Trip Authentication-->
+</beans>
