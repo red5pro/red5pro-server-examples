@@ -1,0 +1,371 @@
+@font-face {
+  font-family: 'Lato';
+  src: url('../fonts/Lato-Regular.ttf'), url('http://fonts.googleapis.com/css?family=Lato:400,700');
+  src: url('../fonts/fontawesome-webfont.eot?v=4.0.3');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lato Bold';
+  src: url('../fonts/Lato-Bold.ttf'), url('http://fonts.googleapis.com/css?family=Lato:400,700');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lato', 'Times New Roman';
+  margin: 1em;
+  padding: 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+p {
+    margin: 0 0 10px;
+}
+
+h1 {
+  font-weight: 400;
+  font-size: 42px;
+  color: #444;
+}
+
+h2 {
+  font-weight: 300;
+  font-size: 30px;
+  color: #444;
+}
+
+h3 {
+  font-weight: 300;
+  font-size: 24px;
+  color: rgb(227, 25, 0);
+}
+
+hr.top-padded-rule {
+  margin-top: 40px;
+}
+
+.left {
+  float: left;
+}
+
+.black-text {
+  color: #444;
+}
+
+.red-text {
+  color: rgb(227, 25, 0);
+}
+
+.white-text {
+  color: rgb(255, 255, 255);
+}
+
+.small-font-size {
+  font-size: 12px;
+}
+
+.medium-font-size {
+  font-size: 16px;
+}
+
+.clear-fix {
+  overflow: auto;
+  zoom: 1;
+}
+
+.clear-fix:after {
+    clear: both;
+}
+
+.clear-fix:before, .clear-fix:after {
+    display: table;
+    content: " ";
+}
+
+a.link {
+  color: rgb(227, 25, 0);
+  text-decoration: none;
+}
+
+a.link:hover {
+  text-decoration: underline;
+  color: rgb(149, 0, 0);
+}
+
+#header-field {
+  position: relative;
+  float: left;
+  margin-top: 16px;
+}
+
+#server-version-field {
+  background-color: #e3e3e3;
+  padding: 2px 22px;
+}
+
+#ip-field {
+  text-align: right;
+  color: rgb(255, 255, 255);
+  position: relative;
+  float: right;
+  margin-top: 0px;
+}
+
+#ip-overlay {
+  position: absolute;
+  width: 230px;
+  right: 20px;
+  top: 80px;
+  background-color: rgb(239, 239, 239);
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: 3px 3px 5px #e3e3e3;
+  padding: 20px;
+  z-index: 1000;
+}
+
+#ip-address-overlay {
+  position: absolute;
+  width: 230px;
+  right: 20px;
+  top: 106px;
+  background-color: rgb(239, 239, 239);
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: 3px 3px 5px #e3e3e3;
+  padding: 20px;
+  z-index: 1001;
+}
+
+.overlay-close-button {
+  text-align: right;
+  margin-top:-14px;
+}
+.top-nudge {
+  padding-top: 14px;
+}
+#ip-suggestions-table {
+  width: 100%;
+  margin-bottom: 14px;
+}
+#ip-suggestions-table tr td {
+  border: 1px solid #aaa;
+  padding: 6px;
+  margin: 0;
+}
+
+.hidden {
+  display: none;
+}
+.unhide {
+  display: block;
+}
+
+.red5pro-logo-page {
+  margin-left: -12px;
+}
+
+.red5pro-logo-header {
+  display: inline-block;
+  width: 205px;
+  position: relative;
+  padding-top: 12px;
+}
+
+.red5pro-logo-footer {
+  width: 100px;
+  margin: -5px 0px -3px -5px;
+}
+
+.red5pro-header-link {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+.red5pro-header-link:active {
+  color: rgb(0, 0, 0);
+}
+
+.red5pro-header {
+  font-size: 32px;
+}
+
+.red5pro-header.registration-mark {
+  font-size: 16px;
+  vertical-align: text-top;
+}
+
+.header-bar {
+  background-color: #a8a8a8;
+  border-color: rgb(166, 168, 168);
+  padding: 12px 30px 12px 20px;
+ }
+
+.footer {
+  background-color: #f7f7f7;
+  border-top: 1px solid;
+  border-color: rgb(166, 168, 168);
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.footer-copyright {
+  margin-top: 12px
+}
+
+#footer-email {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#footer-email-lead:before {
+    content: "";
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    margin-left: -48px;
+    margin-top: -6px;
+    opacity: 0.4;
+    background: url('../images/email.png') no-repeat;
+    background-size: 32px 32px;
+}
+
+.email-header {
+  font-weight: 300;
+  font-size: 24px;
+  font-family: 'Lato', sans-serif;
+}
+
+.container:before {
+  display: table;
+  content: " ";
+}
+
+.container:after {
+  clear: both;
+  display: table;
+  content: " ";
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px
+}
+
+#menu-section {
+  display: block;
+  position: relative;
+  float: left;
+  width: 25%;
+}
+
+#content-section {
+  display: block;
+  position: relative;
+  float: left;
+  width: 75%;
+  margin-bottom: 60px;
+  padding-left: 20px;
+}
+
+.menu-content {
+  background-color: rgb(239, 239, 239);
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.menu-listing {
+  list-style: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+.menu-listing li {
+  position: relative;
+  display: block;
+  line-height: 1.5;
+}
+
+.menu-listing li a {
+  display: block;
+  padding: 5px 20px;
+  z-index: 1;
+  position: relative;
+  text-decoration: none;
+}
+
+.menu-listing li a.menu-active {
+  border-right: 1px solid;
+}
+
+.menu-listing li a:hover {
+  text-decoration: underline;
+  color: rgb(149, 0, 0);
+  background-color: #f7f7f7;
+  border-right: 1px solid;
+}
+
+.menu-sublisting {
+  padding: 0;
+}
+
+.menu-sublisting li {
+  margin-left: 20px;
+}
+
+.menu-listing-internal {
+  font-weight: bold;
+}
+
+.menu-listing-external {
+  font-weight: bold;
+}
+
+.menu-listing-nested {
+  font-weight: normal;
+}
+
+.tag-line {
+  margin-top: 0px;
+  color: #a8a8a8;
+}
+
+.content-section-story {
+  max-width: 560px;
+}
+
+@media (min-width: 992px) {
+
+  .main-container {
+    width: 970px;
+  }
+
+  #menu-section {
+    width: 213px;
+  }
+/*
+  #content-section {
+    width: 556px;
+  }
+*/
+}
+
+@media (max-width: 991px) {
+}
