@@ -34,7 +34,6 @@
 
 #include <sstream>
 
-#include "general.h"
 #include "nn_index.h"
 #include "ground_truth.h"
 #include "index_testing.h"
@@ -55,7 +54,7 @@ NNIndex<Distance>* create_index_by_type(const Matrix<typename Distance::ElementT
 
 struct AutotunedIndexParams : public IndexParams
 {
-    AutotunedIndexParams(float target_precision = 0.8, float build_weight = 0.01, float memory_weight = 0, float sample_fraction = 0.1)
+    AutotunedIndexParams(float target_precision = 0.8f, float build_weight = 0.01f, float memory_weight = 0.f, float sample_fraction = 0.1f)
     {
         (*this)["algorithm"] = FLANN_INDEX_AUTOTUNED;
         // precision desired (used for autotuning, -1 otherwise)
@@ -497,7 +496,7 @@ private:
         const int nn = 1;
         const size_t SAMPLE_COUNT = 1000;
 
-        assert(bestIndex_ != NULL); // must have a valid index
+        CV_Assert(bestIndex_ != NULL && "Requires a valid index"); // must have a valid index
 
         float speedup = 0;
 

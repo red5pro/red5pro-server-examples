@@ -1,65 +1,122 @@
-# Demo Mask
-Live demo used to introduce the brew feature. Plugin uses opencv objdetect to locate a face
+# Face Mask Demo
 
+A Red5 Pro server plugin demonstrating the Brew API (v2) for native video processing. Uses OpenCV's objdetect module for real-time face detection on live video streams.
 
-# Building the JAR
+## Prerequisites
 
-For all platforms, to build the jar plugin:
+- JDK 11 or higher
+- Maven 3.x
+- Docker (for release builds)
+- Red5 Pro Server
+
+## Building
+
+### Release Build (Recommended)
+
+Build the complete JAR with all native libraries bundled:
+
+```sh
+mvn clean package -Prelease
+```
+
+This automatically:
+
+1. Builds OpenCV 4.13.0 and facemask module in a CentOS 7.9 Docker container
+2. Packages all natives inside the JAR
+
+Output: `target/opencv-facemask.jar` (~5.4 MB)
+
+The JAR extracts native libraries from `native/facemask/` to a temp directory at runtime. Deploy the single JAR - no separate `.so` files needed.
+
+### Development Build
+
+Build JAR only (requires natives built separately):
+
 ```sh
 mvn clean install
 ```
-The jar will be found in the target folder, and installs to server plugins directory.
 
+Output: `target/opencv-facemask.jar` (without bundled natives)
 
-# Building the native code
+### Native Build Only
 
-Install build tools 
-
-```sh
-apt-get update apt install build-essential cmake git pkg-config libgtk-3-dev  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev  libxvidcore-dev libx264-dev libjpeg-dev libpng-dev libtiff-dev  gfortran openexr libatlas-base-dev python3-dev python3-numpy  libtbb2 libtbb-dev libdc1394-22-dev libopenexr-dev  libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
-```
-
-Navigate into the c++ folder and call 'make' 
-
-Requires openJDK 11 or higher. 
-
-# Server configuration
-This demo uses native brew API version 2. This requires you to change the red5pro-activation.xml file property to use the AudioCapableProcessor:
+Build native components without Maven:
 
 ```sh
-<property name="nativeLoader" value="com.red5pro.media.transform.codec.AudioCapableProcessor" />
+./docker/build-opencv.sh
 ```
 
-Compile the jar and place it into the server plugins folder.
+Output:
 
-Create a directory named 'facemask' in the server plugins folder.
+- `target/facemask.so`
+- `src/main/lib/amd64-Linux-gpp/*.so`
 
-Put the two resource xml files into the facemask directory.
+### Local Native Build
 
-Edit module-facemask.xml file as required. 
-
-Set moduleFile path to your compiled native code facemask-4.2.0.so binary  
-
-Edit as required the the supportLibs list of openCV components.  
+If you have OpenCV 4.13.0 installed locally:
 
 ```sh
-
-    <bean name="config" class="com.red5pro.server.cauldron.facemask.ModuleConfig" >	
-		<property name="moduleFile" value="/usr/local/red5pro/plugins/facemask/facemask-4.2.0.so"/>
-		<property name="supportLibs" >
-		    <list >
-				<value>/usr/local/red5pro/plugins/facemask/libopencv_core.so</value>
-				<value>/usr/local/red5pro/plugins/facemask/libopencv_imgproc.so</value>
-				<value>/usr/local/red5pro/plugins/facemask/libopencv_objdetect.so</value>
-		    </list>
-		</property>
-	</bean>
-
+cd src/main/c++
+make
 ```
-The Support entries are loaded sequentially so any linker errors at runtime can be solved by correctly ordering the dependancies in the supportLibs list as above. 
- 
 
+## Deployment
 
+### Option A: Bundled JAR (Recommended)
 
+Using the release build JAR with bundled natives:
 
+1. Configure `red5pro-activation.xml`:
 
+   ```xml
+   <property name="nativeLoader" value="com.red5pro.media.transform.codec.AudioCapableProcessor" />
+   ```
+
+2. Copy files:
+
+   ```sh
+   cp target/opencv-facemask.jar /usr/local/red5pro/plugins/
+   mkdir -p /usr/local/red5pro/plugins/native/facemask
+   cp src/main/resources/module-facemask.xml /usr/local/red5pro/plugins/native/facemask/
+   cp src/main/resources/haarcascade_frontalface_alt.xml /usr/local/red5pro/plugins/native/facemask/
+   ```
+
+The bundled natives are extracted automatically at runtime.
+
+### Option B: Separate Files
+
+Using the development build with separate native files:
+
+1. Configure `red5pro-activation.xml`:
+
+   ```xml
+   <property name="nativeLoader" value="com.red5pro.media.transform.codec.AudioCapableProcessor" />
+   ```
+
+2. Copy files:
+
+   ```sh
+   cp target/opencv-facemask.jar /usr/local/red5pro/plugins/
+   mkdir -p /usr/local/red5pro/plugins/native/facemask
+   cp target/facemask.so /usr/local/red5pro/plugins/native/facemask/
+   cp src/main/lib/amd64-Linux-gpp/libopencv_*.so /usr/local/red5pro/plugins/native/facemask/
+   cp src/main/resources/module-facemask.xml /usr/local/red5pro/plugins/native/facemask/
+   cp src/main/resources/haarcascade_frontalface_alt.xml /usr/local/red5pro/plugins/native/facemask/
+   ```
+
+3. Edit `plugins/native/facemask/module-facemask.xml` with correct paths:
+
+   ```xml
+   <bean name="config" class="com.red5pro.server.cauldron.facemask.ModuleConfig">
+       <property name="moduleFile" value="/usr/local/red5pro/plugins/native/facemask/facemask.so"/>
+       <property name="supportLibs">
+           <list>
+               <value>/usr/local/red5pro/plugins/native/facemask/libopencv_core.so</value>
+               <value>/usr/local/red5pro/plugins/native/facemask/libopencv_imgproc.so</value>
+               <value>/usr/local/red5pro/plugins/native/facemask/libopencv_objdetect.so</value>
+           </list>
+       </property>
+   </bean>
+   ```
+
+**Note:** The `supportLibs` entries are loaded sequentially. Library order matters: core -> imgproc -> objdetect.

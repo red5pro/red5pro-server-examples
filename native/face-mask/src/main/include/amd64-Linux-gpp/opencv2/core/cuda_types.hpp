@@ -66,6 +66,9 @@
     #define __CV_CUDA_HOST_DEVICE__
 #endif
 
+#include "opencv2/core/cvdef.h"
+#include "opencv2/core.hpp"
+
 namespace cv
 {
     namespace cuda
@@ -106,8 +109,8 @@ namespace cv
 
             size_t step;
 
-            __CV_CUDA_HOST_DEVICE__       T* ptr(int y = 0)       { return (      T*)( (      char*)DevPtr<T>::data + y * step); }
-            __CV_CUDA_HOST_DEVICE__ const T* ptr(int y = 0) const { return (const T*)( (const char*)DevPtr<T>::data + y * step); }
+            __CV_CUDA_HOST_DEVICE__       T* ptr(int y = 0)       { return (      T*)( (      char*)(((DevPtr<T>*)this)->data) + y * step); }
+            __CV_CUDA_HOST_DEVICE__ const T* ptr(int y = 0) const { return (const T*)( (const char*)(((DevPtr<T>*)this)->data) + y * step); }
 
             __CV_CUDA_HOST_DEVICE__       T& operator ()(int y, int x)       { return ptr(y)[x]; }
             __CV_CUDA_HOST_DEVICE__ const T& operator ()(int y, int x) const { return ptr(y)[x]; }
@@ -124,6 +127,11 @@ namespace cv
 
             int cols;
             int rows;
+
+            CV_NODISCARD_STD __CV_CUDA_HOST_DEVICE__ Size size() const { return {cols, rows}; }
+            CV_NODISCARD_STD __CV_CUDA_HOST_DEVICE__ T& operator ()(const Point &pos)       { return (*this)(pos.y, pos.x); }
+            CV_NODISCARD_STD __CV_CUDA_HOST_DEVICE__ const T& operator ()(const Point &pos) const { return (*this)(pos.y, pos.x); }
+            using PtrStep<T>::operator();
         };
 
         typedef PtrStepSz<unsigned char> PtrStepSzb;

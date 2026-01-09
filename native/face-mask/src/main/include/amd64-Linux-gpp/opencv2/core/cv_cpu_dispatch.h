@@ -55,7 +55,7 @@
 #  ifdef _MSC_VER
 #    include <nmmintrin.h>
 #    if defined(_M_X64)
-#      define CV_POPCNT_U64 _mm_popcnt_u64
+#      define CV_POPCNT_U64 (int)_mm_popcnt_u64
 #    endif
 #    define CV_POPCNT_U32 _mm_popcnt_u32
 #  else
@@ -72,12 +72,16 @@
 #  define CV_AVX 1
 #endif
 #ifdef CV_CPU_COMPILE_FP16
-#  if defined(__arm__) || defined(__aarch64__) || defined(_M_ARM) || defined(_M_ARM64)
+#  if defined(__arm__) || defined(__aarch64__) || defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC)
 #    include <arm_neon.h>
 #  else
 #    include <immintrin.h>
 #  endif
 #  define CV_FP16 1
+#endif
+#ifdef CV_CPU_COMPILE_NEON_DOTPROD
+#  include <arm_neon.h>
+#  define CV_NEON_DOT 1
 #endif
 #ifdef CV_CPU_COMPILE_AVX2
 #  include <immintrin.h>
@@ -133,17 +137,32 @@
 #  define CV_FMA3 1
 #endif
 
-#if defined _WIN32 && (defined(_M_ARM) || defined(_M_ARM64)) && (defined(CV_CPU_COMPILE_NEON) || !defined(_MSC_VER))
+#if defined _WIN32 && (defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC)) && (defined(CV_CPU_COMPILE_NEON) || !defined(_MSC_VER))
 # include <Intrin.h>
 # include <arm_neon.h>
 # define CV_NEON 1
-#elif defined(__ARM_NEON__) || (defined (__ARM_NEON) && defined(__aarch64__))
+#elif defined(__ARM_NEON)
 #  include <arm_neon.h>
 #  define CV_NEON 1
 #endif
 
-#if defined(__ARM_NEON__) || defined(__aarch64__)
-#  include <arm_neon.h>
+/* RVV-related macro states with different compiler
+// +--------------------+----------+----------+
+// | Macro              | Upstream | XuanTie  |
+// +--------------------+----------+----------+
+// | CV_CPU_COMPILE_RVV | defined  | defined  |
+// | CV_RVV             | 1        | 0        |
+// | CV_RVV071          | 0        | 1        |
+// | CV_TRY_RVV         | 1        | 1        |
+// +--------------------+----------+----------+
+*/
+#ifdef CV_CPU_COMPILE_RVV
+#  ifdef __riscv_vector_071
+#    define CV_RVV071 1
+#  else
+#    define CV_RVV 1
+#  endif
+#include <riscv_vector.h>
 #endif
 
 #ifdef CV_CPU_COMPILE_VSX
@@ -161,6 +180,16 @@
 #ifdef CV_CPU_COMPILE_MSA
 #  include "hal/msa_macros.h"
 #  define CV_MSA 1
+#endif
+
+#ifdef CV_CPU_COMPILE_LSX
+#  include <lsxintrin.h>
+#  define CV_LSX 1
+#endif
+
+#ifdef CV_CPU_COMPILE_LASX
+#  include <lasxintrin.h>
+#  define CV_LASX 1
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -201,19 +230,28 @@ struct VZeroUpperGuard {
 #  define CV_MMX 1
 #  define CV_SSE 1
 #  define CV_SSE2 1
-#elif defined _WIN32 && (defined(_M_ARM) || defined(_M_ARM64)) && (defined(CV_CPU_COMPILE_NEON) || !defined(_MSC_VER))
+#elif defined _WIN32 && (defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC)) && (defined(CV_CPU_COMPILE_NEON) || !defined(_MSC_VER))
 # include <Intrin.h>
 # include <arm_neon.h>
 # define CV_NEON 1
-#elif defined(__ARM_NEON__) || (defined (__ARM_NEON) && defined(__aarch64__))
+#elif defined(__ARM_NEON)
 #  include <arm_neon.h>
 #  define CV_NEON 1
+#ifdef __ARM_FEATURE_SVE
+# include<arm_sve.h>
+# define CV_SVE 1
+#endif
 #elif defined(__VSX__) && defined(__PPC64__) && defined(__LITTLE_ENDIAN__)
 #  include <altivec.h>
 #  undef vector
 #  undef pixel
 #  undef bool
 #  define CV_VSX 1
+#endif
+
+#ifdef __F16C__
+#  include <immintrin.h>
+#  define CV_FP16 1
 #endif
 
 #endif // !__OPENCV_BUILD && !__CUDACC (Compatibility code)
@@ -328,6 +366,14 @@ struct VZeroUpperGuard {
 #  define CV_NEON 0
 #endif
 
+#ifndef CV_SVE
+#  define CV_SVE 0
+#endif
+
+#ifndef CV_RVV071
+#  define CV_RVV071 0
+#endif
+
 #ifndef CV_VSX
 #  define CV_VSX 0
 #endif
@@ -342,4 +388,16 @@ struct VZeroUpperGuard {
 
 #ifndef CV_WASM_SIMD
 #  define CV_WASM_SIMD 0
+#endif
+
+#ifndef CV_RVV
+#  define CV_RVV 0
+#endif
+
+#ifndef CV_LSX
+#  define CV_LSX 0
+#endif
+
+#ifndef CV_LASX
+#  define CV_LASX 0
 #endif

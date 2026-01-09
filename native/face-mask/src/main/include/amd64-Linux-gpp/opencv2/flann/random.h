@@ -37,8 +37,6 @@
 #include <cstdlib>
 #include <vector>
 
-#include "general.h"
-
 namespace cvflann
 {
 
@@ -108,7 +106,6 @@ public:
     /**
      * Constructor.
      * @param n Size of the interval from which to generate
-     * @return
      */
     UniqueRandom(int n)
     {

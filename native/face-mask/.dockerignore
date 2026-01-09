@@ -1,0 +1,19 @@
+# Ignore build artifacts
+target/
+*.jar
+*.class
+
+# Ignore existing libs (we build fresh)
+src/main/lib/
+
+# Ignore IDE files
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+
+# Ignore git
+.git/
+
+# Ignore docker output
+docker/build-opencv.sh

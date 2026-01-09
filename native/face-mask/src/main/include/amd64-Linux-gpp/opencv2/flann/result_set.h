@@ -40,6 +40,9 @@
 #include <set>
 #include <vector>
 
+#include "opencv2/core/base.hpp"
+#include "opencv2/core/cvdef.h"
+
 namespace cvflann
 {
 
@@ -160,7 +163,8 @@ class KNNResultSet : public ResultSet<DistanceType>
     DistanceType worst_distance_;
 
 public:
-    KNNResultSet(int capacity_) : capacity(capacity_), count(0)
+    KNNResultSet(int capacity_)
+        : indices(NULL), dists(NULL), capacity(capacity_), count(0), worst_distance_(0)
     {
     }
 
@@ -186,6 +190,8 @@ public:
 
     void addPoint(DistanceType dist, int index) CV_OVERRIDE
     {
+        CV_DbgAssert(indices);
+        CV_DbgAssert(dists);
         if (dist >= worst_distance_) return;
         int i;
         for (i = count; i > 0; --i) {
@@ -196,12 +202,10 @@ public:
 #endif
             {
                 // Check for duplicate indices
-                int j = i - 1;
-                while ((j >= 0) && (dists[j] == dist)) {
+                for (int j = i; dists[j] == dist && j--;) {
                     if (indices[j] == index) {
                         return;
                     }
-                    --j;
                 }
                 break;
             }
@@ -356,7 +360,6 @@ public:
     }
 
     /** The number of neighbors in the set
-     * @return
      */
     size_t size() const
     {
@@ -365,7 +368,6 @@ public:
 
     /** The distance of the furthest neighbor
      * If we don't have enough neighbors, it returns the max possible value
-     * @return
      */
     inline DistanceType worstDist() const CV_OVERRIDE
     {
@@ -486,7 +488,6 @@ public:
 
     /** The distance of the furthest neighbor
      * If we don't have enough neighbors, it returns the max possible value
-     * @return
      */
     inline DistanceType worstDist() const CV_OVERRIDE
     {

@@ -13,9 +13,6 @@
 /* Compile for 'real' NVIDIA GPU architectures */
 #define CUDA_ARCH_BIN ""
 
-/* Create PTX or BIN for 1.0 compute capability */
-/* #undef CUDA_ARCH_BIN_OR_PTX_10 */
-
 /* NVIDIA GPU features are used */
 #define CUDA_ARCH_FEATURES ""
 
@@ -30,9 +27,6 @@
 
 /* Clp support */
 /* #undef HAVE_CLP */
-
-/* Cocoa API */
-/* #undef HAVE_COCOA */
 
 /* NVIDIA CUDA Runtime API*/
 /* #undef HAVE_CUDA */
@@ -59,12 +53,6 @@
 /* Geospatial Data Abstraction Library */
 /* #undef HAVE_GDAL */
 
-/* GTK+ 2.0 Thread support */
-/* #undef HAVE_GTHREAD */
-
-/* GTK+ 2.x toolkit */
-/* #undef HAVE_GTK */
-
 /* Halide support */
 /* #undef HAVE_HALIDE */
 
@@ -72,34 +60,40 @@
 /* #undef HAVE_VULKAN */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#define HAVE_INTTYPES_H 1
+/* #undef HAVE_INTTYPES_H */
 
 /* Intel Integrated Performance Primitives */
-#define HAVE_IPP
-#define HAVE_IPP_ICV
-#define HAVE_IPP_IW
-#define HAVE_IPP_IW_LL
+/* #undef HAVE_IPP */
+/* #undef HAVE_IPP_ICV */
+/* #undef HAVE_IPP_IW */
+/* #undef HAVE_IPP_IW_LL */
 
 /* JPEG-2000 codec */
-#define HAVE_JASPER
+#define HAVE_OPENJPEG
+/* #undef HAVE_JASPER */
+
+/* AVIF codec */
+/* #undef HAVE_AVIF */
 
 /* IJG JPEG codec */
 #define HAVE_JPEG
 
-/* libpng/png.h needs to be included */
-#define HAVE_LIBPNG_PNG_H
+/* JPEG XL codec */
+/* #undef HAVE_JPEGXL */
 
 /* GDCM DICOM codec */
 /* #undef HAVE_GDCM */
 
 /* NVIDIA Video Decoding API*/
 /* #undef HAVE_NVCUVID */
+/* #undef HAVE_NVCUVID_HEADER */
+/* #undef HAVE_DYNLINK_NVCUVID_HEADER */
 
 /* NVIDIA Video Encoding API*/
 /* #undef HAVE_NVCUVENC */
 
 /* OpenCL Support */
-#define HAVE_OPENCL
+/* #undef HAVE_OPENCL */
 /* #undef HAVE_OPENCL_STATIC */
 /* #undef HAVE_OPENCL_SVM */
 
@@ -107,7 +101,7 @@
 /* #undef HAVE_OPENCL_D3D11_NV */
 
 /* OpenEXR codec */
-/* #undef HAVE_OPENEXR */
+#define HAVE_OPENEXR
 
 /* OpenGL support*/
 /* #undef HAVE_OPENGL */
@@ -115,17 +109,14 @@
 /* PNG codec */
 #define HAVE_PNG
 
+/* PNG codec */
+/* #undef HAVE_SPNG */
+
 /* Posix threads (pthreads) */
 #define HAVE_PTHREAD
 
 /* parallel_for with pthreads */
 #define HAVE_PTHREADS_PF
-
-/* Qt support */
-/* #undef HAVE_QT */
-
-/* Qt OpenGL support */
-/* #undef HAVE_QT_OPENGL */
 
 /* Intel Threading Building Blocks */
 /* #undef HAVE_TBB */
@@ -135,9 +126,6 @@
 
 /* TIFF codec */
 #define HAVE_TIFF
-
-/* Win32 UI */
-/* #undef HAVE_WIN32UI */
 
 /* Define if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
@@ -162,6 +150,6 @@
 #define OPENCV_TRACE
 
 /* Library QR-code decoding */
-#define HAVE_QUIRC
+/* #undef HAVE_QUIRC */
 
 #endif // OPENCV_CVCONFIG_H_INCLUDED

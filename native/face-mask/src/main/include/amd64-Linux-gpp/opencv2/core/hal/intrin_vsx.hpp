@@ -28,7 +28,7 @@ struct v_uint8x16
 
     explicit v_uint8x16(const vec_uchar16& v) : val(v)
     {}
-    v_uint8x16() : val(vec_uchar16_z)
+    v_uint8x16()
     {}
     v_uint8x16(vec_bchar16 v) : val(vec_uchar16_c(v))
     {}
@@ -36,6 +36,9 @@ struct v_uint8x16
                uchar v8, uchar v9, uchar v10, uchar v11, uchar v12, uchar v13, uchar v14, uchar v15)
         : val(vec_uchar16_set(v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15))
     {}
+
+    static inline v_uint8x16 zero() { return v_uint8x16(vec_uchar16_z); }
+
     uchar get0() const
     { return vec_extract(val, 0); }
 };
@@ -48,7 +51,7 @@ struct v_int8x16
 
     explicit v_int8x16(const vec_char16& v) : val(v)
     {}
-    v_int8x16() : val(vec_char16_z)
+    v_int8x16()
     {}
     v_int8x16(vec_bchar16 v) : val(vec_char16_c(v))
     {}
@@ -56,6 +59,9 @@ struct v_int8x16
               schar v8, schar v9, schar v10, schar v11, schar v12, schar v13, schar v14, schar v15)
         : val(vec_char16_set(v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15))
     {}
+
+    static inline v_int8x16 zero() { return v_int8x16(vec_char16_z); }
+
     schar get0() const
     { return vec_extract(val, 0); }
 };
@@ -68,13 +74,16 @@ struct v_uint16x8
 
     explicit v_uint16x8(const vec_ushort8& v) : val(v)
     {}
-    v_uint16x8() : val(vec_ushort8_z)
+    v_uint16x8()
     {}
     v_uint16x8(vec_bshort8 v) : val(vec_ushort8_c(v))
     {}
     v_uint16x8(ushort v0, ushort v1, ushort v2, ushort v3, ushort v4, ushort v5, ushort v6, ushort v7)
         : val(vec_ushort8_set(v0, v1, v2, v3, v4, v5, v6, v7))
     {}
+
+    static inline v_uint16x8 zero() { return v_uint16x8(vec_ushort8_z); }
+
     ushort get0() const
     { return vec_extract(val, 0); }
 };
@@ -87,13 +96,16 @@ struct v_int16x8
 
     explicit v_int16x8(const vec_short8& v) : val(v)
     {}
-    v_int16x8() : val(vec_short8_z)
+    v_int16x8()
     {}
     v_int16x8(vec_bshort8 v) : val(vec_short8_c(v))
     {}
     v_int16x8(short v0, short v1, short v2, short v3, short v4, short v5, short v6, short v7)
         : val(vec_short8_set(v0, v1, v2, v3, v4, v5, v6, v7))
     {}
+
+    static inline v_int16x8 zero() { return v_int16x8(vec_short8_z); }
+
     short get0() const
     { return vec_extract(val, 0); }
 };
@@ -106,12 +118,15 @@ struct v_uint32x4
 
     explicit v_uint32x4(const vec_uint4& v) : val(v)
     {}
-    v_uint32x4() : val(vec_uint4_z)
+    v_uint32x4()
     {}
     v_uint32x4(vec_bint4 v) : val(vec_uint4_c(v))
     {}
     v_uint32x4(unsigned v0, unsigned v1, unsigned v2, unsigned v3) : val(vec_uint4_set(v0, v1, v2, v3))
     {}
+
+    static inline v_uint32x4 zero() { return v_uint32x4(vec_uint4_z); }
+
     uint get0() const
     { return vec_extract(val, 0); }
 };
@@ -124,12 +139,15 @@ struct v_int32x4
 
     explicit v_int32x4(const vec_int4& v) : val(v)
     {}
-    v_int32x4() : val(vec_int4_z)
+    v_int32x4()
     {}
     v_int32x4(vec_bint4 v) : val(vec_int4_c(v))
     {}
     v_int32x4(int v0, int v1, int v2, int v3) : val(vec_int4_set(v0, v1, v2, v3))
     {}
+
+    static inline v_int32x4 zero() { return v_int32x4(vec_int4_z); }
+
     int get0() const
     { return vec_extract(val, 0); }
 };
@@ -142,12 +160,15 @@ struct v_float32x4
 
     explicit v_float32x4(const vec_float4& v) : val(v)
     {}
-    v_float32x4() : val(vec_float4_z)
+    v_float32x4()
     {}
     v_float32x4(vec_bint4 v) : val(vec_float4_c(v))
     {}
     v_float32x4(float v0, float v1, float v2, float v3) : val(vec_float4_set(v0, v1, v2, v3))
     {}
+
+    static inline v_float32x4 zero() { return v_float32x4(vec_float4_z); }
+
     float get0() const
     { return vec_extract(val, 0); }
 };
@@ -160,12 +181,15 @@ struct v_uint64x2
 
     explicit v_uint64x2(const vec_udword2& v) : val(v)
     {}
-    v_uint64x2() : val(vec_udword2_z)
+    v_uint64x2()
     {}
     v_uint64x2(vec_bdword2 v) : val(vec_udword2_c(v))
     {}
     v_uint64x2(uint64 v0, uint64 v1) : val(vec_udword2_set(v0, v1))
     {}
+
+    static inline v_uint64x2 zero() { return v_uint64x2(vec_udword2_z); }
+
     uint64 get0() const
     { return vec_extract(val, 0); }
 };
@@ -178,12 +202,15 @@ struct v_int64x2
 
     explicit v_int64x2(const vec_dword2& v) : val(v)
     {}
-    v_int64x2() : val(vec_dword2_z)
+    v_int64x2()
     {}
     v_int64x2(vec_bdword2 v) : val(vec_dword2_c(v))
     {}
     v_int64x2(int64 v0, int64 v1) : val(vec_dword2_set(v0, v1))
     {}
+
+    static inline v_int64x2 zero() { return v_int64x2(vec_dword2_z); }
+
     int64 get0() const
     { return vec_extract(val, 0); }
 };
@@ -196,12 +223,15 @@ struct v_float64x2
 
     explicit v_float64x2(const vec_double2& v) : val(v)
     {}
-    v_float64x2() : val(vec_double2_z)
+    v_float64x2()
     {}
     v_float64x2(vec_bdword2 v) : val(vec_double2_c(v))
     {}
     v_float64x2(double v0, double v1) : val(vec_double2_set(v0, v1))
     {}
+
+    static inline v_float64x2 zero() { return v_float64x2(vec_double2_z); }
+
     double get0() const
     { return vec_extract(val, 0); }
 };
@@ -229,8 +259,10 @@ OPENCV_HAL_IMPL_VSX_EXTRACT_N(v_float64x2, double)
  * if vec_xxx_c defined as C++ cast, clang-5 will pass it
 */
 #define OPENCV_HAL_IMPL_VSX_INITVEC(_Tpvec, _Tp, suffix, cast)                        \
-inline _Tpvec v_setzero_##suffix() { return _Tpvec(); }                               \
+inline _Tpvec v_setzero_##suffix() { return _Tpvec(vec_splats((_Tp)0)); }             \
 inline _Tpvec v_setall_##suffix(_Tp v) { return _Tpvec(vec_splats((_Tp)v));}          \
+template <> inline _Tpvec v_setzero_() { return v_setzero_##suffix(); }               \
+template <> inline _Tpvec v_setall_(_Tp v) { return v_setall_##suffix(v); }       \
 template<typename _Tpvec0> inline _Tpvec v_reinterpret_as_##suffix(const _Tpvec0 &a)  \
 { return _Tpvec((cast)a.val); }
 
@@ -483,48 +515,44 @@ inline void v_recombine(const _Tpvec& a, const _Tpvec& b, _Tpvec& c, _Tpvec& d)
 /* Element-wise binary and unary operations */
 /** Arithmetics **/
 #define OPENCV_HAL_IMPL_VSX_BIN_OP(bin_op, _Tpvec, intrin)       \
-inline _Tpvec operator bin_op (const _Tpvec& a, const _Tpvec& b) \
-{ return _Tpvec(intrin(a.val, b.val)); }                         \
-inline _Tpvec& operator bin_op##= (_Tpvec& a, const _Tpvec& b)   \
-{ a.val = intrin(a.val, b.val); return a; }
+inline _Tpvec bin_op(const _Tpvec& a, const _Tpvec& b) \
+{ return _Tpvec(intrin(a.val, b.val)); }
 
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_uint8x16, vec_adds)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_uint8x16, vec_subs)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_int8x16,  vec_adds)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_int8x16, vec_subs)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_uint16x8, vec_adds)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_uint16x8, vec_subs)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_int16x8, vec_adds)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_int16x8, vec_subs)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_uint32x4, vec_add)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_uint32x4, vec_sub)
-OPENCV_HAL_IMPL_VSX_BIN_OP(*, v_uint32x4, vec_mul)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_int32x4, vec_add)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_int32x4, vec_sub)
-OPENCV_HAL_IMPL_VSX_BIN_OP(*, v_int32x4, vec_mul)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_float32x4, vec_add)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_float32x4, vec_sub)
-OPENCV_HAL_IMPL_VSX_BIN_OP(*, v_float32x4, vec_mul)
-OPENCV_HAL_IMPL_VSX_BIN_OP(/, v_float32x4, vec_div)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_float64x2, vec_add)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_float64x2, vec_sub)
-OPENCV_HAL_IMPL_VSX_BIN_OP(*, v_float64x2, vec_mul)
-OPENCV_HAL_IMPL_VSX_BIN_OP(/, v_float64x2, vec_div)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_uint64x2, vec_add)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_uint64x2, vec_sub)
-OPENCV_HAL_IMPL_VSX_BIN_OP(+, v_int64x2, vec_add)
-OPENCV_HAL_IMPL_VSX_BIN_OP(-, v_int64x2, vec_sub)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_uint8x16, vec_adds)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_uint8x16, vec_subs)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_int8x16,  vec_adds)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_int8x16, vec_subs)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_uint16x8, vec_adds)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_uint16x8, vec_subs)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_int16x8, vec_adds)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_int16x8, vec_subs)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_uint32x4, vec_add)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_uint32x4, vec_sub)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_mul, v_uint32x4, vec_mul)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_int32x4, vec_add)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_int32x4, vec_sub)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_mul, v_int32x4, vec_mul)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_float32x4, vec_add)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_float32x4, vec_sub)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_mul, v_float32x4, vec_mul)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_div, v_float32x4, vec_div)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_float64x2, vec_add)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_float64x2, vec_sub)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_mul, v_float64x2, vec_mul)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_div, v_float64x2, vec_div)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_uint64x2, vec_add)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_uint64x2, vec_sub)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_add, v_int64x2, vec_add)
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_sub, v_int64x2, vec_sub)
 
 // saturating multiply
 #define OPENCV_HAL_IMPL_VSX_MUL_SAT(_Tpvec, _Tpwvec)             \
-    inline _Tpvec operator * (const _Tpvec& a, const _Tpvec& b)  \
+    inline _Tpvec v_mul(const _Tpvec& a, const _Tpvec& b)        \
     {                                                            \
         _Tpwvec c, d;                                            \
         v_mul_expand(a, b, c, d);                                \
         return v_pack(c, d);                                     \
-    }                                                            \
-    inline _Tpvec& operator *= (_Tpvec& a, const _Tpvec& b)      \
-    { a = a * b; return a; }
+    }
 
 OPENCV_HAL_IMPL_VSX_MUL_SAT(v_int8x16,  v_int16x8)
 OPENCV_HAL_IMPL_VSX_MUL_SAT(v_uint8x16, v_uint16x8)
@@ -566,9 +594,9 @@ OPENCV_HAL_IMPL_VSX_BIN_FUNC(v_mul_wrap, vec_mul)
 
 /** Bitwise shifts **/
 #define OPENCV_HAL_IMPL_VSX_SHIFT_OP(_Tpvec, shr, splfunc)   \
-inline _Tpvec operator << (const _Tpvec& a, int imm)         \
+inline _Tpvec v_shl(const _Tpvec& a, int imm)                \
 { return _Tpvec(vec_sl(a.val, splfunc(imm))); }              \
-inline _Tpvec operator >> (const _Tpvec& a, int imm)         \
+inline _Tpvec v_shr(const _Tpvec& a, int imm)                \
 { return _Tpvec(shr(a.val, splfunc(imm))); }                 \
 template<int imm> inline _Tpvec v_shl(const _Tpvec& a)       \
 { return _Tpvec(vec_sl(a.val, splfunc(imm))); }              \
@@ -587,10 +615,10 @@ OPENCV_HAL_IMPL_VSX_SHIFT_OP(v_int64x2, vec_sra, vec_udword2_sp)
 
 /** Bitwise logic **/
 #define OPENCV_HAL_IMPL_VSX_LOGIC_OP(_Tpvec)    \
-OPENCV_HAL_IMPL_VSX_BIN_OP(&, _Tpvec, vec_and)  \
-OPENCV_HAL_IMPL_VSX_BIN_OP(|, _Tpvec, vec_or)   \
-OPENCV_HAL_IMPL_VSX_BIN_OP(^, _Tpvec, vec_xor)  \
-inline _Tpvec operator ~ (const _Tpvec& a)      \
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_and, _Tpvec, vec_and)  \
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_or, _Tpvec, vec_or)    \
+OPENCV_HAL_IMPL_VSX_BIN_OP(v_xor, _Tpvec, vec_xor)  \
+inline _Tpvec v_not(const _Tpvec& a)                \
 { return _Tpvec(vec_not(a.val)); }
 
 OPENCV_HAL_IMPL_VSX_LOGIC_OP(v_uint8x16)
@@ -620,17 +648,17 @@ OPENCV_HAL_IMPL_VSX_SELECT(v_float64x2, vec_bdword2_c)
 
 /** Comparison **/
 #define OPENCV_HAL_IMPL_VSX_INT_CMP_OP(_Tpvec)                 \
-inline _Tpvec operator == (const _Tpvec& a, const _Tpvec& b)   \
+inline _Tpvec v_eq(const _Tpvec& a, const _Tpvec& b)           \
 { return _Tpvec(vec_cmpeq(a.val, b.val)); }                    \
-inline _Tpvec operator != (const _Tpvec& a, const _Tpvec& b)   \
+inline _Tpvec v_ne(const _Tpvec& a, const _Tpvec& b)           \
 { return _Tpvec(vec_cmpne(a.val, b.val)); }                    \
-inline _Tpvec operator < (const _Tpvec& a, const _Tpvec& b)    \
+inline _Tpvec v_lt(const _Tpvec& a, const _Tpvec& b)           \
 { return _Tpvec(vec_cmplt(a.val, b.val)); }                    \
-inline _Tpvec operator > (const _Tpvec& a, const _Tpvec& b)    \
+inline _Tpvec v_gt(const _Tpvec& a, const _Tpvec& b)           \
 { return _Tpvec(vec_cmpgt(a.val, b.val)); }                    \
-inline _Tpvec operator <= (const _Tpvec& a, const _Tpvec& b)   \
+inline _Tpvec v_le(const _Tpvec& a, const _Tpvec& b)           \
 { return _Tpvec(vec_cmple(a.val, b.val)); }                    \
-inline _Tpvec operator >= (const _Tpvec& a, const _Tpvec& b)   \
+inline _Tpvec v_ge(const _Tpvec& a, const _Tpvec& b)           \
 { return _Tpvec(vec_cmpge(a.val, b.val)); }
 
 OPENCV_HAL_IMPL_VSX_INT_CMP_OP(v_uint8x16)
@@ -660,7 +688,7 @@ inline _Tpvec v_rotate_##suffix(const _Tpvec& a)                                
 {                                                                               \
     const int wd = imm * sizeof(typename _Tpvec::lane_type);                    \
     if (wd > 15)                                                                \
-        return _Tpvec();                                                        \
+        return _Tpvec::zero();                                                  \
     return _Tpvec((cast)shf(vec_uchar16_c(a.val), vec_uchar16_sp(wd << 3)));    \
 }
 
@@ -973,7 +1001,7 @@ inline int v_scan_forward(const v_float64x2& a) { return trailingZeros32(v_signm
 
 template<typename _Tpvec>
 inline bool v_check_all(const _Tpvec& a)
-{ return vec_all_lt(a.val, _Tpvec().val); }
+{ return vec_all_lt(a.val, _Tpvec::zero().val); }
 inline bool v_check_all(const v_uint8x16& a)
 { return v_check_all(v_reinterpret_as_s8(a)); }
 inline bool v_check_all(const v_uint16x8& a)
@@ -989,7 +1017,7 @@ inline bool v_check_all(const v_float64x2& a)
 
 template<typename _Tpvec>
 inline bool v_check_any(const _Tpvec& a)
-{ return vec_any_lt(a.val, _Tpvec().val); }
+{ return vec_any_lt(a.val, _Tpvec::zero().val); }
 inline bool v_check_any(const v_uint8x16& a)
 { return v_check_any(v_reinterpret_as_s8(a)); }
 inline bool v_check_any(const v_uint16x8& a)
@@ -1030,7 +1058,7 @@ OPENCV_HAL_IMPL_VSX_MULADD(v_float32x4)
 OPENCV_HAL_IMPL_VSX_MULADD(v_float64x2)
 
 inline v_int32x4 v_muladd(const v_int32x4& a, const v_int32x4& b, const v_int32x4& c)
-{ return a * b + c; }
+{ return v_add(v_mul(a,  b), c); }
 
 // TODO: exp, log, sin, cos
 
@@ -1059,12 +1087,12 @@ inline v_uint8x16 v_absdiff(const v_int8x16& a, const v_int8x16& b)
 inline v_uint16x8 v_absdiff(const v_int16x8& a, const v_int16x8& b)
 { return v_reinterpret_as_u16(v_sub_wrap(v_max(a, b), v_min(a, b))); }
 inline v_uint32x4 v_absdiff(const v_int32x4& a, const v_int32x4& b)
-{ return v_reinterpret_as_u32(v_max(a, b) - v_min(a, b)); }
+{ return v_reinterpret_as_u32(v_sub(v_max(a, b), v_min(a, b))); }
 
 inline v_float32x4 v_absdiff(const v_float32x4& a, const v_float32x4& b)
-{ return v_abs(a - b); }
+{ return v_abs(v_sub(a, b)); }
 inline v_float64x2 v_absdiff(const v_float64x2& a, const v_float64x2& b)
-{ return v_abs(a - b); }
+{ return v_abs(v_sub(a, b)); }
 
 /** Absolute difference for signed integers **/
 inline v_int8x16 v_absdiffs(const v_int8x16& a, const v_int8x16& b)
@@ -1331,14 +1359,14 @@ inline v_float32x4 v_pack_triplets(const v_float32x4& vec)
 
 /////// FP16 support ////////
 
-inline v_float32x4 v_load_expand(const float16_t* ptr)
+inline v_float32x4 v_load_expand(const hfloat* ptr)
 {
     vec_ushort8 vf16 = vec_ld_l8((const ushort*)ptr);
 #if CV_VSX3 && defined(vec_extract_fp_from_shorth)
     return v_float32x4(vec_extract_fp_from_shorth(vf16));
 #elif CV_VSX3 && !defined(CV_COMPILER_VSX_BROKEN_ASM)
     vec_float4 vf32;
-    __asm__ __volatile__ ("xvcvhpsp %x0,%x1" : "=wf" (vf32) : "wa" (vec_mergeh(vf16, vf16)));
+    __asm__ __volatile__ ("xvcvhpsp %x0,%x1" : "=wa" (vf32) : "wa" (vec_mergeh(vf16, vf16)));
     return v_float32x4(vf32);
 #else
     const vec_int4 z = vec_int4_z, delta = vec_int4_sp(0x38000000);
@@ -1358,12 +1386,12 @@ inline v_float32x4 v_load_expand(const float16_t* ptr)
 #endif
 }
 
-inline void v_pack_store(float16_t* ptr, const v_float32x4& v)
+inline void v_pack_store(hfloat* ptr, const v_float32x4& v)
 {
 // fixme: Is there any builtin op or intrinsic that cover "xvcvsphp"?
 #if CV_VSX3 && !defined(CV_COMPILER_VSX_BROKEN_ASM)
     vec_ushort8 vf16;
-    __asm__ __volatile__ ("xvcvsphp %x0,%x1" : "=wa" (vf16) : "wf" (v.val));
+    __asm__ __volatile__ ("xvcvsphp %x0,%x1" : "=wa" (vf16) : "wa" (v.val));
     vec_st_l8(vec_mergesqe(vf16, vf16), ptr);
 #else
     const vec_int4 signmask = vec_int4_sp(0x80000000);
@@ -1412,7 +1440,7 @@ inline v_int64x2 v_dotprod(const v_int32x4& a, const v_int32x4& b)
     return v_int64x2(vec_add(even, odd));
 }
 inline v_int64x2 v_dotprod(const v_int32x4& a, const v_int32x4& b, const v_int64x2& c)
-{ return v_dotprod(a, b) + c; }
+{ return v_add(v_dotprod(a, b), c); }
 
 // 8 >> 32
 inline v_uint32x4 v_dotprod_expand(const v_uint8x16& a, const v_uint8x16& b, const v_uint32x4& c)
@@ -1455,7 +1483,7 @@ inline v_uint64x2 v_dotprod_expand(const v_uint16x8& a, const v_uint16x8& b)
     return v_uint64x2(vec_add(s0, s1));
 }
 inline v_uint64x2 v_dotprod_expand(const v_uint16x8& a, const v_uint16x8& b, const v_uint64x2& c)
-{ return v_dotprod_expand(a, b) + c; }
+{ return v_add(v_dotprod_expand(a, b), c); }
 
 inline v_int64x2 v_dotprod_expand(const v_int16x8& a, const v_int16x8& b)
 {
@@ -1465,13 +1493,13 @@ inline v_int64x2 v_dotprod_expand(const v_int16x8& a, const v_int16x8& b)
     return v_int64x2(vec_add(vec_mergeh(c.val, d.val), vec_mergel(c.val, d.val)));
 }
 inline v_int64x2 v_dotprod_expand(const v_int16x8& a, const v_int16x8& b, const v_int64x2& c)
-{ return v_dotprod_expand(a, b) + c; }
+{ return v_add(v_dotprod_expand(a, b), c); }
 
 // 32 >> 64f
 inline v_float64x2 v_dotprod_expand(const v_int32x4& a, const v_int32x4& b)
 { return v_cvt_f64(v_dotprod(a, b)); }
 inline v_float64x2 v_dotprod_expand(const v_int32x4& a, const v_int32x4& b, const v_float64x2& c)
-{ return v_dotprod_expand(a, b) + c; }
+{ return v_add(v_dotprod_expand(a, b), c); }
 
 //////// Fast Dot Product ////////
 
@@ -1479,7 +1507,7 @@ inline v_float64x2 v_dotprod_expand(const v_int32x4& a, const v_int32x4& b, cons
 inline v_int32x4 v_dotprod_fast(const v_int16x8& a, const v_int16x8& b)
 { return v_dotprod(a, b); }
 inline v_int32x4 v_dotprod_fast(const v_int16x8& a, const v_int16x8& b, const v_int32x4& c)
-{ return v_int32x4(vec_msum(a.val, b.val, vec_int4_z)) + c; }
+{ return v_add(v_int32x4(vec_msum(a.val, b.val, vec_int4_z)), c); }
 // 32 >> 64
 inline v_int64x2 v_dotprod_fast(const v_int32x4& a, const v_int32x4& b)
 { return v_dotprod(a, b); }
@@ -1490,7 +1518,7 @@ inline v_int64x2 v_dotprod_fast(const v_int32x4& a, const v_int32x4& b, const v_
 inline v_uint32x4 v_dotprod_expand_fast(const v_uint8x16& a, const v_uint8x16& b)
 { return v_dotprod_expand(a, b); }
 inline v_uint32x4 v_dotprod_expand_fast(const v_uint8x16& a, const v_uint8x16& b, const v_uint32x4& c)
-{ return v_uint32x4(vec_msum(a.val, b.val, vec_uint4_z)) + c; }
+{ return v_add(v_uint32x4(vec_msum(a.val, b.val, vec_uint4_z)), c); }
 
 inline v_int32x4 v_dotprod_expand_fast(const v_int8x16& a, const v_int8x16& b)
 {
@@ -1501,7 +1529,7 @@ inline v_int32x4 v_dotprod_expand_fast(const v_int8x16& a, const v_int8x16& b)
     return v_int32x4(vec_msum(a0, b0, vec_msum(a1, b1, vec_int4_z)));
 }
 inline v_int32x4 v_dotprod_expand_fast(const v_int8x16& a, const v_int8x16& b, const v_int32x4& c)
-{ return v_dotprod_expand_fast(a, b) + c; }
+{ return v_add(v_dotprod_expand_fast(a, b), c); }
 
 // 16 >> 64
 inline v_uint64x2 v_dotprod_expand_fast(const v_uint16x8& a, const v_uint16x8& b)
@@ -1514,10 +1542,10 @@ inline v_int64x2 v_dotprod_expand_fast(const v_int16x8& a, const v_int16x8& b)
     v_int32x4 prod = v_dotprod(a, b);
     v_int64x2 c, d;
     v_expand(prod, c, d);
-    return c + d;
+    return v_add(c, d);
 }
 inline v_int64x2 v_dotprod_expand_fast(const v_int16x8& a, const v_int16x8& b, const v_int64x2& c)
-{ return v_dotprod_expand_fast(a, b) + c; }
+{ return v_add(v_dotprod_expand_fast(a, b), c); }
 
 // 32 >> 64f
 inline v_float64x2 v_dotprod_expand_fast(const v_int32x4& a, const v_int32x4& b)
@@ -1564,81 +1592,23 @@ OPENCV_HAL_IMPL_VSX_TRANSPOSE4x4(v_uint32x4, vec_uint4)
 OPENCV_HAL_IMPL_VSX_TRANSPOSE4x4(v_int32x4, vec_int4)
 OPENCV_HAL_IMPL_VSX_TRANSPOSE4x4(v_float32x4, vec_float4)
 
-template<int i>
-inline v_int8x16 v_broadcast_element(v_int8x16 v)
-{
-    return v_int8x16(vec_perm(v.val, v.val, vec_splats((unsigned char)i)));
-}
+template<int i, typename Tvec>
+inline Tvec v_broadcast_element(const Tvec& v)
+{ return Tvec(vec_splat(v.val, i)); }
 
-template<int i>
-inline v_uint8x16 v_broadcast_element(v_uint8x16 v)
-{
-    return v_uint8x16(vec_perm(v.val, v.val, vec_splats((unsigned char)i)));
-}
+#include "intrin_math.hpp"
+inline v_float32x4 v_exp(const v_float32x4& x) { return v_exp_default_32f<v_float32x4, v_int32x4>(x); }
+inline v_float32x4 v_log(const v_float32x4& x) { return v_log_default_32f<v_float32x4, v_int32x4>(x); }
+inline void v_sincos(const v_float32x4& x, v_float32x4& s, v_float32x4& c) { v_sincos_default_32f<v_float32x4, v_int32x4>(x, s, c); }
+inline v_float32x4 v_sin(const v_float32x4& x) { return v_sin_default_32f<v_float32x4, v_int32x4>(x); }
+inline v_float32x4 v_cos(const v_float32x4& x) { return v_cos_default_32f<v_float32x4, v_int32x4>(x); }
+inline v_float32x4 v_erf(const v_float32x4& x) { return v_erf_default_32f<v_float32x4, v_int32x4>(x); }
 
-template<int i>
-inline v_int16x8 v_broadcast_element(v_int16x8 v)
-{
-    unsigned char t0 = 2*i, t1 = 2*i + 1;
-    vec_uchar16 p = {t0, t1, t0, t1, t0, t1, t0, t1, t0, t1, t0, t1, t0, t1, t0, t1};
-    return v_int16x8(vec_perm(v.val, v.val, p));
-}
-
-template<int i>
-inline v_uint16x8 v_broadcast_element(v_uint16x8 v)
-{
-    unsigned char t0 = 2*i, t1 = 2*i + 1;
-    vec_uchar16 p = {t0, t1, t0, t1, t0, t1, t0, t1, t0, t1, t0, t1, t0, t1, t0, t1};
-    return v_uint16x8(vec_perm(v.val, v.val, p));
-}
-
-template<int i>
-inline v_int32x4 v_broadcast_element(v_int32x4 v)
-{
-    unsigned char t0 = 4*i, t1 = 4*i + 1, t2 = 4*i + 2, t3 = 4*i + 3;
-    vec_uchar16 p = {t0, t1, t2, t3, t0, t1, t2, t3, t0, t1, t2, t3, t0, t1, t2, t3};
-    return v_int32x4(vec_perm(v.val, v.val, p));
-}
-
-template<int i>
-inline v_uint32x4 v_broadcast_element(v_uint32x4 v)
-{
-    unsigned char t0 = 4*i, t1 = 4*i + 1, t2 = 4*i + 2, t3 = 4*i + 3;
-    vec_uchar16 p = {t0, t1, t2, t3, t0, t1, t2, t3, t0, t1, t2, t3, t0, t1, t2, t3};
-    return v_uint32x4(vec_perm(v.val, v.val, p));
-}
-
-template<int i>
-inline v_int64x2 v_broadcast_element(v_int64x2 v)
-{
-    unsigned char t0 = 8*i, t1 = 8*i + 1, t2 = 8*i + 2, t3 = 8*i + 3, t4 = 8*i + 4, t5 = 8*i + 5, t6 = 8*i + 6, t7 = 8*i + 7;
-    vec_uchar16 p = {t0, t1, t2, t3, t4, t5, t6, t7, t0, t1, t2, t3, t4, t5, t6, t7};
-    return v_int64x2(vec_perm(v.val, v.val, p));
-}
-
-template<int i>
-inline v_uint64x2 v_broadcast_element(v_uint64x2 v)
-{
-    unsigned char t0 = 8*i, t1 = 8*i + 1, t2 = 8*i + 2, t3 = 8*i + 3, t4 = 8*i + 4, t5 = 8*i + 5, t6 = 8*i + 6, t7 = 8*i + 7;
-    vec_uchar16 p = {t0, t1, t2, t3, t4, t5, t6, t7, t0, t1, t2, t3, t4, t5, t6, t7};
-    return v_uint64x2(vec_perm(v.val, v.val, p));
-}
-
-template<int i>
-inline v_float32x4 v_broadcast_element(v_float32x4 v)
-{
-    unsigned char t0 = 4*i, t1 = 4*i + 1, t2 = 4*i + 2, t3 = 4*i + 3;
-    vec_uchar16 p = {t0, t1, t2, t3, t0, t1, t2, t3, t0, t1, t2, t3, t0, t1, t2, t3};
-    return v_float32x4(vec_perm(v.val, v.val, p));
-}
-
-template<int i>
-inline v_float64x2 v_broadcast_element(v_float64x2 v)
-{
-    unsigned char t0 = 8*i, t1 = 8*i + 1, t2 = 8*i + 2, t3 = 8*i + 3, t4 = 8*i + 4, t5 = 8*i + 5, t6 = 8*i + 6, t7 = 8*i + 7;
-    vec_uchar16 p = {t0, t1, t2, t3, t4, t5, t6, t7, t0, t1, t2, t3, t4, t5, t6, t7};
-    return v_float64x2(vec_perm(v.val, v.val, p));
-}
+inline v_float64x2 v_exp(const v_float64x2& x) { return v_exp_default_64f<v_float64x2, v_int64x2>(x); }
+inline v_float64x2 v_log(const v_float64x2& x) { return v_log_default_64f<v_float64x2, v_int64x2>(x); }
+inline void v_sincos(const v_float64x2& x, v_float64x2& s, v_float64x2& c) { v_sincos_default_64f<v_float64x2, v_int64x2>(x, s, c); }
+inline v_float64x2 v_sin(const v_float64x2& x) { return v_sin_default_64f<v_float64x2, v_int64x2>(x); }
+inline v_float64x2 v_cos(const v_float64x2& x) { return v_cos_default_64f<v_float64x2, v_int64x2>(x); }
 
 CV_CPU_OPTIMIZATION_HAL_NAMESPACE_END
 
