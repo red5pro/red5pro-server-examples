@@ -22,9 +22,9 @@ namespace logging {
 /** Set global logging level
 @return previous logging level
 */
-CV_EXPORTS LogLevel setLogLevel(LogLevel logLevel);
+CV_EXPORTS_W LogLevel setLogLevel(LogLevel logLevel);
 /** Get global logging level */
-CV_EXPORTS LogLevel getLogLevel();
+CV_EXPORTS_W LogLevel getLogLevel();
 
 CV_EXPORTS void registerLogTag(cv::utils::logging::LogTag* plogtag);
 
@@ -42,6 +42,44 @@ CV_EXPORTS void writeLogMessage(LogLevel logLevel, const char* message);
 
 /** Write log message */
 CV_EXPORTS void writeLogMessageEx(LogLevel logLevel, const char* tag, const char* file, int line, const char* func, const char* message);
+
+/**
+ * @brief Function pointer type for writeLogMessage. Used by replaceWriteLogMessage.
+ */
+typedef void (*WriteLogMessageFuncType)(LogLevel, const char*);
+
+/**
+ * @brief Function pointer type for writeLogMessageEx. Used by replaceWriteLogMessageEx.
+ */
+typedef void (*WriteLogMessageExFuncType)(LogLevel, const char*, const char*, int, const char*, const char*);
+
+/**
+ * @brief Replaces the OpenCV writeLogMessage function with a user-defined function.
+ * @note The user-defined function must have the same signature as writeLogMessage.
+ * @note The user-defined function must accept arguments that can be potentially null.
+ * @note The user-defined function must be thread-safe, as OpenCV logging may be called
+ *       from multiple threads.
+ * @note The user-defined function must not perform any action that can trigger
+ *       deadlocks or infinite loop. Many OpenCV functions are not re-entrant.
+ * @note Once replaced, logs will not go through the OpenCV writeLogMessage function.
+ * @note To restore, call this function with a nullptr.
+ */
+CV_EXPORTS void replaceWriteLogMessage(WriteLogMessageFuncType f);
+
+/**
+ * @brief Replaces the OpenCV writeLogMessageEx function with a user-defined function.
+ * @note The user-defined function must have the same signature as writeLogMessage.
+ * @note The user-defined function must accept arguments that can be potentially null.
+ * @note The user-defined function must be thread-safe, as OpenCV logging may be called
+ *       from multiple threads.
+ * @note The user-defined function must not perform any action that can trigger
+ *       deadlocks or infinite loop. Many OpenCV functions are not re-entrant.
+ * @note Once replaced, logs will not go through any of the OpenCV logging functions
+ *       such as writeLogMessage or writeLogMessageEx, until their respective restore
+ *       methods are called.
+ * @note To restore, call this function with a nullptr.
+ */
+CV_EXPORTS void replaceWriteLogMessageEx(WriteLogMessageExFuncType f);
 
 } // namespace
 
@@ -104,14 +142,16 @@ struct LogTagAuto
 // non-null. Do not re-define.
 #define CV_LOGTAG_GLOBAL cv::utils::logging::internal::getGlobalLogTag()
 
-#define CV_LOG_WITH_TAG(tag, msgLevel, ...) \
+#define CV_LOG_WITH_TAG(tag, msgLevel, extra_check0, extra_check1, ...) \
     for(;;) { \
+        extra_check0; \
         const auto cv_temp_msglevel = (cv::utils::logging::LogLevel)(msgLevel); \
         if (cv_temp_msglevel >= (CV_LOG_STRIP_LEVEL)) break; \
         auto cv_temp_logtagptr = CV_LOGTAG_PTR_CAST(CV_LOGTAG_EXPAND_NAME(tag)); \
         if (!cv_temp_logtagptr) cv_temp_logtagptr = CV_LOGTAG_PTR_CAST(CV_LOGTAG_FALLBACK); \
         if (!cv_temp_logtagptr) cv_temp_logtagptr = CV_LOGTAG_PTR_CAST(CV_LOGTAG_GLOBAL); \
         if (cv_temp_logtagptr && (cv_temp_msglevel > cv_temp_logtagptr->level)) break; \
+        extra_check1; \
         std::stringstream cv_temp_logstream; \
         cv_temp_logstream << __VA_ARGS__; \
         cv::utils::logging::internal::writeLogMessageEx( \
@@ -124,27 +164,90 @@ struct LogTagAuto
         break; \
     }
 
-#define CV_LOG_FATAL(tag, ...)   CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_FATAL, __VA_ARGS__)
-#define CV_LOG_ERROR(tag, ...)   CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_ERROR, __VA_ARGS__)
-#define CV_LOG_WARNING(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_WARNING, __VA_ARGS__)
-#define CV_LOG_INFO(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_INFO, __VA_ARGS__)
-#define CV_LOG_DEBUG(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_DEBUG, __VA_ARGS__)
-#define CV_LOG_VERBOSE(tag, v, ...) CV_LOG_WITH_TAG(tag, (cv::utils::logging::LOG_LEVEL_VERBOSE + (int)(v)), __VA_ARGS__)
+#define CV_LOG_FATAL(tag, ...)   CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_FATAL, , , __VA_ARGS__)
+#define CV_LOG_ERROR(tag, ...)   CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_ERROR, , , __VA_ARGS__)
+#define CV_LOG_WARNING(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_WARNING, , , __VA_ARGS__)
+#define CV_LOG_INFO(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_INFO, , , __VA_ARGS__)
+#define CV_LOG_DEBUG(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_DEBUG, , , __VA_ARGS__)
+#define CV_LOG_VERBOSE(tag, v, ...) CV_LOG_WITH_TAG(tag, (cv::utils::logging::LOG_LEVEL_VERBOSE + (int)(v)), , , __VA_ARGS__)
 
 #if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_INFO
-# undef CV_LOG_INFO
-# define CV_LOG_INFO(tag, ...)
+#undef CV_LOG_INFO
+#define CV_LOG_INFO(tag, ...)
 #endif
 
 #if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_DEBUG
-# undef CV_LOG_DEBUG
-# define CV_LOG_DEBUG(tag, ...)
+#undef CV_LOG_DEBUG
+#define CV_LOG_DEBUG(tag, ...)
 #endif
 
 #if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_VERBOSE
-# undef CV_LOG_VERBOSE
-# define CV_LOG_VERBOSE(tag, v, ...)
+#undef CV_LOG_VERBOSE
+#define CV_LOG_VERBOSE(tag, v, ...)
 #endif
+
+//! @cond IGNORED
+#define CV__LOG_ONCE_CHECK_PRE \
+    static bool _cv_log_once_ ## __LINE__ = false; \
+    if (_cv_log_once_ ## __LINE__) break;
+
+#define CV__LOG_ONCE_CHECK_POST \
+    _cv_log_once_ ## __LINE__ = true;
+
+#define CV__LOG_IF_CHECK(logging_cond) \
+    if (!(logging_cond)) break;
+
+//! @endcond
+
+
+// CV_LOG_ONCE_XXX macros
+
+#define CV_LOG_ONCE_ERROR(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_ERROR, CV__LOG_ONCE_CHECK_PRE, CV__LOG_ONCE_CHECK_POST, __VA_ARGS__)
+#define CV_LOG_ONCE_WARNING(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_WARNING, CV__LOG_ONCE_CHECK_PRE, CV__LOG_ONCE_CHECK_POST, __VA_ARGS__)
+#define CV_LOG_ONCE_INFO(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_INFO, CV__LOG_ONCE_CHECK_PRE, CV__LOG_ONCE_CHECK_POST, __VA_ARGS__)
+#define CV_LOG_ONCE_DEBUG(tag, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_DEBUG, CV__LOG_ONCE_CHECK_PRE, CV__LOG_ONCE_CHECK_POST, __VA_ARGS__)
+#define CV_LOG_ONCE_VERBOSE(tag, v, ...) CV_LOG_WITH_TAG(tag, (cv::utils::logging::LOG_LEVEL_VERBOSE + (int)(v)), CV__LOG_ONCE_CHECK_PRE, CV__LOG_ONCE_CHECK_POST, __VA_ARGS__)
+
+#if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_INFO
+#undef CV_LOG_ONCE_INFO
+#define CV_LOG_ONCE_INFO(tag, ...)
+#endif
+
+#if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_DEBUG
+#undef CV_LOG_ONCE_DEBUG
+#define CV_LOG_ONCE_DEBUG(tag, ...)
+#endif
+
+#if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_VERBOSE
+#undef CV_LOG_ONCE_VERBOSE
+#define CV_LOG_ONCE_VERBOSE(tag, v, ...)
+#endif
+
+
+// CV_LOG_IF_XXX macros
+
+#define CV_LOG_IF_FATAL(tag, logging_cond, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_FATAL, , CV__LOG_IF_CHECK(logging_cond), __VA_ARGS__)
+#define CV_LOG_IF_ERROR(tag, logging_cond, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_ERROR, , CV__LOG_IF_CHECK(logging_cond), __VA_ARGS__)
+#define CV_LOG_IF_WARNING(tag, logging_cond, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_WARNING, , CV__LOG_IF_CHECK(logging_cond), __VA_ARGS__)
+#define CV_LOG_IF_INFO(tag, logging_cond, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_INFO, , CV__LOG_IF_CHECK(logging_cond), __VA_ARGS__)
+#define CV_LOG_IF_DEBUG(tag, logging_cond, ...) CV_LOG_WITH_TAG(tag, cv::utils::logging::LOG_LEVEL_DEBUG, , CV__LOG_IF_CHECK(logging_cond), __VA_ARGS__)
+#define CV_LOG_IF_VERBOSE(tag, v, logging_cond, ...) CV_LOG_WITH_TAG(tag, (cv::utils::logging::LOG_LEVEL_VERBOSE + (int)(v)), , CV__LOG_IF_CHECK(logging_cond), __VA_ARGS__)
+
+#if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_INFO
+#undef CV_LOG_IF_INFO
+#define CV_LOG_IF_INFO(tag, logging_cond, ...)
+#endif
+
+#if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_DEBUG
+#undef CV_LOG_IF_DEBUG
+#define CV_LOG_IF_DEBUG(tag, logging_cond, ...)
+#endif
+
+#if CV_LOG_STRIP_LEVEL <= CV_LOG_LEVEL_VERBOSE
+#undef CV_LOG_IF_VERBOSE
+#define CV_LOG_IF_VERBOSE(tag, v, logging_cond, ...)
+#endif
+
 
 //! @}
 

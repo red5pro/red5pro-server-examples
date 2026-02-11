@@ -58,6 +58,12 @@
 #include "dynamic_bitset.h"
 #include "matrix.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4702) //disable unreachable code
+#endif
+
+
 namespace cvflann
 {
 
@@ -162,8 +168,7 @@ public:
     {
         feature_size_ = feature_size;
         CV_UNUSED(key_size);
-        std::cerr << "LSH is not implemented for that type" << std::endl;
-        assert(0);
+        CV_Error(cv::Error::StsUnsupportedFormat, "LSH is not implemented for that type" );
     }
 
     /** Add a feature to the table
@@ -209,8 +214,6 @@ public:
     }
 
     /** Get a bucket given the key
-     * @param key
-     * @return
      */
     inline const Bucket* getBucketFromKey(BucketKey key) const
     {
@@ -243,13 +246,11 @@ public:
      */
     size_t getKey(const ElementType* /*feature*/) const
     {
-        std::cerr << "LSH is not implemented for that type" << std::endl;
-        assert(0);
-        return 1;
+        CV_Error(cv::Error::StsUnsupportedFormat, "LSH is not implemented for that type" );
+        return 0;
     }
 
     /** Get statistics about the table
-     * @return
      */
     LshStats getStats() const;
 
@@ -423,7 +424,7 @@ inline size_t LshTable<unsigned char>::getKey(const unsigned char* feature) cons
         size_t mask_block = mask_[i / sizeof(size_t)];
         while (mask_block) {
             // Get the lowest set bit in the mask block
-            size_t lowest_bit = mask_block & (-(ptrdiff_t)mask_block);
+            size_t lowest_bit = mask_block & ~(mask_block - 1);
             // Add it to the current subsignature if necessary
             subsignature += (feature_block & lowest_bit) ? bit_index : 0;
             // Reset the bit in the mask block
@@ -509,6 +510,10 @@ inline LshStats LshTable<unsigned char>::getStats() const
 // End the two namespaces
 }
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
